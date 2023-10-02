@@ -55,13 +55,16 @@ type IUser = {
     onboarded: boolean;
 }
 
-export async function getUser(userId: string): Promise<IUser | null> {
+export async function getUser(userId: string) {
     connectToDB();
 
     try {
-        return await User.findOne(
-            { id: userId }
-        )
+        return await User
+            .findOne({ id: userId })
+            // .populate({
+            //     path: 'communities',
+            //     model: Community
+            // })
     } catch (e: any) {
         throw new Error(`Failed to get user: ${e.message}`)
     }

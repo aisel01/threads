@@ -77,7 +77,6 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
             path: pathname, 
         });
 
-
         if (pathname === "/profile/edit") {
             router.back();
         } else {
@@ -211,7 +210,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                         type="submit"
                         className="bg-primary-500"
                     >
-                        Submit
+                        {btnTitle}
                     </Button>
                 </form>
             </Form>

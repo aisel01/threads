@@ -13,7 +13,7 @@ async function Page() {
     const userInfo = await getUser(user.id);
 
     if (userInfo?.onboarded) {
-        // redirect('/');
+        redirect('/');
     }
     
     const userData = {
@@ -34,7 +34,7 @@ async function Page() {
             <section className="mt-9 bg-dark-2 p-10">
                 <AccountProfile 
                     user={userData}
-                    btnTitle="Continue"
+                    btnTitle="Submit"
                 />
             </section>
         </main>
