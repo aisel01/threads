@@ -4,8 +4,6 @@ import { getThreads } from "@/lib/actions/thread.actions";
 async function Page() {
   const { threads, hasNext } = await getThreads();
 
-  console.log({threads, hasNext });
-
   return (
     <>
       <h1 className="head-text text-left">Home</h1>

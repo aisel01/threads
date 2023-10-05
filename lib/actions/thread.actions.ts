@@ -13,31 +13,6 @@ type CreateThreadPayload = {
     path: string;
 };
 
-export async function createThread({
-    text,
-    author,
-    communityId,
-    path
-}: CreateThreadPayload): Promise<void> {
-    try {
-        await connectToDB();
-    
-        const createdThread = await Thread.create({
-            text,
-            author,
-            community: null,
-        });
-    
-        await User.findByIdAndUpdate(author, {
-            $push: { threads: createdThread._id },
-        });
-    
-        revalidatePath(path);
-    } catch (e: any) {
-        throw new Error(`Error creating thread: ${e.message}`);
-    }
-}
-
 type IThread = {
     text: string;
     author: string;
@@ -115,4 +90,67 @@ export async function getThread(id: string) {
     }
 }
 
+export async function createThread({
+    text,
+    author,
+    communityId,
+    path
+}: CreateThreadPayload): Promise<void> {
+    try {
+        await connectToDB();
+    
+        const createdThread = await Thread.create({
+            text,
+            author,
+            community: null,
+        });
+    
+        await User.findByIdAndUpdate(author, {
+            $push: { threads: createdThread._id },
+        });
+    
+        revalidatePath(path);
+    } catch (e: any) {
+        throw new Error(`Error creating thread: ${e.message}`);
+    }
+}
 
+
+export async function addCommentToThread({
+    threadId,
+    text,
+    userId,
+    path,
+}: {
+    threadId: string;
+    text: string;
+    userId: string;
+    path: string;
+
+}) {
+    await connectToDB();
+
+    try {
+        const parentThread = await Thread.findById(threadId);
+
+        if (!parentThread) {
+            throw new Error(`Thread with id ${threadId} not found`);
+        }
+
+        const commentThread = new Thread({
+            text,
+            author: userId,
+            parentId: threadId,
+        });
+
+        const savedCommentThread = await commentThread.save();
+
+        parentThread.children.push(savedCommentThread._id);
+
+        await parentThread.save();
+
+        revalidatePath(path);
+    } catch (e: any) {
+        throw new Error(`Error getting thread: ${e.message}`)
+    }
+}
