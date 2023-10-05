@@ -20,7 +20,7 @@ export async function createThread({
     path
 }: CreateThreadPayload): Promise<void> {
     try {
-        connectToDB();
+        await connectToDB();
     
         const createdThread = await Thread.create({
             text,
@@ -47,6 +47,7 @@ type IThread = {
 
 export async function getThreads(page = 1, pageSize = 20) {
     try {
+        await connectToDB();
         
         const skipAmount = (page - 1) * pageSize;
 
@@ -76,6 +77,41 @@ export async function getThreads(page = 1, pageSize = 20) {
 
     } catch (e: any) {
         throw new Error(`Error getting threads: ${e.message}`);
+    }
+}
+
+export async function getThread(id: string) {
+    try {
+        await connectToDB();
+
+        return await Thread
+            .findOne({ id: id })
+            .populate({
+                path: 'author',
+                model: User,
+                select: "_id id name image"
+            })
+            .populate({
+                path: 'children',
+                populate: [
+                    {
+                        path: 'author',
+                        model: User,
+                        select: "_id id name parentId image"
+                    },
+                    {
+                        path: 'children',
+                        model: Thread,
+                        populate: {
+                            path: 'author',
+                            model: User,
+                            select: "_id id name image"
+                        }
+                    }
+                ]
+            }).exec();
+    } catch (e: any) {
+        throw new Error(`Error getting thread: ${e.message}`)
     }
 }
 

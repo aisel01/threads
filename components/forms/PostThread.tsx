@@ -16,11 +16,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ThreadValidation } from '@/lib/validations/thread';
 import { createThread } from "@/lib/actions/thread.actions";
 import * as z from 'zod';
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 
 
 function PostThread({ userId }: { userId: string }) {
+    const router = useRouter();
     const pathname = usePathname();
 
     const form = useForm({
@@ -38,6 +39,8 @@ function PostThread({ userId }: { userId: string }) {
             communityId: null,
             path: pathname,
         });
+
+        router.push("/");
     };
 
     return (
