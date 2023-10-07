@@ -1,7 +1,22 @@
 import ThreadCard from "@/components/cards/ThreadCard";
 import { getThreads } from "@/lib/actions/thread.actions";
+import { getUser } from "@/lib/actions/user.actions";
+import { currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 async function Page() {
+  const user = await currentUser();
+
+  if (!user) {
+      return null;
+  }
+
+  const userInfo = await getUser(user.id);
+
+  if (!userInfo?.onboarded) {
+      redirect('/onboarding');
+  }
+  
   const { threads, hasNext } = await getThreads();
 
   return (
