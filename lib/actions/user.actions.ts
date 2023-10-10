@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
-import { Error } from "mongoose";
+import { Error, FilterQuery, SortOrder } from "mongoose";
 import Thread from "../models/thread.model";
 
 type UpdateUserPayload = {
@@ -94,5 +94,63 @@ export async function getUserPosts(userId: string) {
         return threads;
     } catch (e: any) {
         throw new Error(`Failed to get user posts: ${e.message}`)
+    }
+}
+
+type GetUsersPayload = { 
+    userId: string;
+    searchString?: string;
+    page?: number;
+    pageSize?: number;
+    sortBy?: SortOrder;
+};
+
+export async function getUsers({
+    userId,
+    searchString = '',
+    page = 1, 
+    pageSize = 20,
+    sortBy = 'desc',
+}: GetUsersPayload) {
+    try {
+        await connectToDB();
+       
+        const skipAmount = (page - 1) * pageSize;
+
+        const regex = new RegExp(searchString, 'i');
+
+        const query: FilterQuery<typeof User> = {
+            id: { $ne: userId }
+        };
+
+        if (searchString.trim() !== '') {
+            query.$of = [
+                { username: { $regex: regex } },
+                { name: { $regex: regex } },
+            ]
+        }
+
+        const sortOptions = {
+            createdAt: sortBy
+        };
+
+        const usersQuery = User.find(query)
+            .sort(sortOptions)
+            .skip(skipAmount)
+            .limit(pageSize);
+
+        const totalUsersCount = await User.countDocuments(query);
+
+        const users = await usersQuery.exec();
+
+        const hasNext = totalUsersCount  >skipAmount + users.length;
+
+        return {
+            users,
+            hasNext,
+        };
+        
+    } catch (e: any) {
+        throw new Error(`Failed to get users: ${e.message}`)
     }
 }
