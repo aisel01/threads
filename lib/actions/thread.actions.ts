@@ -28,13 +28,13 @@ export async function getThreads(page = 1, pageSize = 20) {
         const skipAmount = (page - 1) * pageSize;
 
         const threads = await Thread.find({ parentId: { $in: [null, undefined] } })
-            .sort('desc')
+            .sort({ createdAt: "desc" })
             .skip(skipAmount)
             .limit(pageSize)
             .populate({
                 path: "community",
                 model: Community,
-              })
+            })
             .populate({ path: 'author', model: User })
             .populate({ 
                 path: 'children', 
@@ -44,7 +44,6 @@ export async function getThreads(page = 1, pageSize = 20) {
                     select: '_id name parentId image'
                 } 
             });
-            // .populate({ path: 'community', model: Community })
 
         const totalCount = await Thread.countDocuments({ parentId: { $in: [null, undefined] } });
         
