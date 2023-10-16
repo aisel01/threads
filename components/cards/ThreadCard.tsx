@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { formatDateString } from "@/lib/utils";
 
 type ThreadCardProps = {
     id: string;
@@ -10,8 +11,12 @@ type ThreadCardProps = {
         name: string;
         image: string;
     },
-    community?: string;
-    createdAt: Date;
+    community?: {
+        id: string;
+        name: string;
+        image: string;
+    };
+    createdAt: string;
     comments: string[];
     isComment?: boolean;
 }
@@ -23,11 +28,13 @@ function ThreadCard(props: ThreadCardProps) {
         author,
         isComment,
         comments,
+        community,
+        createdAt,  
     } = props;
     
     return (
         <article className={`flex w-full rounded-xl ${isComment ? 'px-0 xs:px-7' : 'bg-dark-2 p-7 ' } `}>
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between flex-col">
                 <div className="flex w-full flex-1 flex-row gap-4">
                     <div className="flex flex-col items-center"> 
                         <Link
@@ -102,6 +109,24 @@ function ThreadCard(props: ThreadCardProps) {
                         </div>
                     </div>
                 </div>
+                {!isComment && community && (
+                    <Link
+                        href={`/communities/${community.id}`}
+                        className="mt-5 flex items-center"
+
+                    >
+                        <p className="text-subtle-medium text-gray-1">
+                            {formatDateString(createdAt)} - {community.name} Community
+                        </p>
+                        <Image
+                            src={community.image}
+                            alt={community.name}
+                            width={14}
+                            height={14}
+                            className="ml-1 rounded-full object-cover"
+                        />
+                    </Link>
+                )}
             </div>
         </article>
     );

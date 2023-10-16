@@ -6,7 +6,8 @@ type ProfileHeaderProps = {
     name: string;
     username: string;
     imgUrl: string;
-    bio: string; 
+    bio: string;
+    type?: 'User' | 'Community';
 }
 
 function ProfileHeader(props: ProfileHeaderProps) {
@@ -17,6 +18,7 @@ function ProfileHeader(props: ProfileHeaderProps) {
         username,
         imgUrl,
         bio, 
+        type = 'User',
     } = props;
 
     return (

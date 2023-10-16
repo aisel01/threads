@@ -1,11 +1,12 @@
 import { getUserPosts } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import ThreadCard from "../cards/ThreadCard";
+import { fetchCommunityPosts } from "@/lib/actions/community.actions";
 
 type TreadsTabProps = {
     accountId: string;
     authUserId: string;
-    accountType: 'User';
+    accountType: 'User' | 'Community';
 }
 
 async function TreadsTab(props: TreadsTabProps) {
@@ -15,29 +16,44 @@ async function TreadsTab(props: TreadsTabProps) {
         accountType,
     } = props;
 
+    let result: any;
 
-    let userWithThreads = await getUserPosts(accountId);
+    if (accountType == 'Community') {
+        result = await fetchCommunityPosts(accountId);
+    } else {
+        result = await getUserPosts(accountId);
+    }
 
-    if (!userWithThreads) {
+    if (!result) {
         redirect('/');
     }
 
+    
     return (
         <section className="mt-9 flex flex-col gap-10">
-            {userWithThreads.threads.map((thread: any) => {
+            {result.threads.map((thread: any) => {
+            console.log({ thread });
                 return (
                     <ThreadCard 
                         key={thread.id}
                         id={thread.id}
                         content={thread.text}
-                        author={{
-                            id: userWithThreads.id,
-                            name: userWithThreads.name,
-                            image: userWithThreads.image,
-                        }}
+                        author={
+                        accountType === "User"
+                            ? { name: result.name, image: result.image, id: result.id }
+                            : {
+                                name: thread.author.name,
+                                image: thread.author.image,
+                                id: thread.author.id,
+                            }
+                        }
+                        community={
+                        accountType === "Community"
+                            ? { name: result.name, id: result.id, image: result.image }
+                            : thread.community
+                        }
                         createdAt={thread.createdAt}
                         comments={thread.comments}
-                        community={thread.community}
                     />
                 );
             })}

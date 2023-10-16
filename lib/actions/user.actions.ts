@@ -5,6 +5,7 @@ import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 import { Error, FilterQuery, SortOrder } from "mongoose";
 import Thread from "../models/thread.model";
+import Community from "../models/community.model";
 
 type UpdateUserPayload = {
     userId: string;
@@ -61,10 +62,10 @@ export async function getUser(userId: string) {
 
         return await User
             .findOne({ id: userId })
-            // .populate({
-            //     path: 'communities',
-            //     model: Community
-            // })
+            .populate({
+                path: 'communities',
+                model: Community
+            })
     } catch (e: any) {
         throw new Error(`Failed to get user: ${e.message}`)
     }
@@ -79,17 +80,19 @@ export async function getUserPosts(userId: string) {
             .populate({
                 path: 'threads',
                 model: Thread,
-                populate: {
-                    path: 'children',
-                    model: Thread,
-                    select: 'name image id',
-                },
-                
+                populate: [
+                    {
+                        path: 'children',
+                        model: Thread,
+                        select: 'name image id',
+                    },
+                    {
+                        path: "community",
+                        model: Community,
+                        select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
+                    },
+                ]
             })
-            // .populate({
-            //     path: 'communities',
-            //     model: Community
-            // })
 
         return threads;
     } catch (e: any) {

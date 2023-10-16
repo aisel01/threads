@@ -186,11 +186,10 @@ export const POST = async (request: Request) => {
         try {
             // Resource: https://clerk.com/docs/reference/backend-api/tag/Organizations#operation/DeleteOrganization
             // Show what evnt?.data sends from above resource
-            const { id } = evnt?.data;
-            console.log("deleted", evnt?.data);
+            const { id } = evnt.data;
+            console.log("deleted", evnt.data);
 
-            // @ts-ignore
-            await deleteCommunity(id);
+            await deleteCommunity(id as string);
 
             return NextResponse.json(
                 { message: "Organization deleted" },

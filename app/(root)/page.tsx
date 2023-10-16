@@ -30,13 +30,13 @@ async function Page() {
                 {threads.map(thread => {
                 return (
                     <ThreadCard
-                    key={thread.id}
-                    id={thread.id}
-                    content={thread.text}
-                    author={thread.author}
-                    createdAt={thread.createdAt}
-                    comments={thread.comments}
-                    community={thread.community}
+                        key={thread.id}
+                        id={thread.id}
+                        content={thread.text}
+                        author={thread.author}
+                        createdAt={thread.createdAt}
+                        comments={thread.comments}
+                        community={thread.community}
                     />
                 );
                 })}

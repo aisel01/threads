@@ -5,6 +5,7 @@ import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 import { Error } from "mongoose";
 import Thread from "../models/thread.model";
+import Community from "../models/community.model";
 
 type CreateThreadPayload = {
     text: string;
@@ -30,6 +31,10 @@ export async function getThreads(page = 1, pageSize = 20) {
             .sort('desc')
             .skip(skipAmount)
             .limit(pageSize)
+            .populate({
+                path: "community",
+                model: Community,
+              })
             .populate({ path: 'author', model: User })
             .populate({ 
                 path: 'children', 
@@ -61,6 +66,11 @@ export async function getThread(id: string) {
 
         return await Thread
             .findOne({ id: id })
+            .populate({
+                path: 'community',
+                model: Community,
+                select: "_id id name image",
+            })
             .populate({
                 path: 'author',
                 model: User,
@@ -99,16 +109,28 @@ export async function createThread({
     try {
         await connectToDB();
     
+        const communityIdObject = await Community.findOne(
+            { id: communityId },
+            { _id: 1 }
+          );
+          
         const createdThread = await Thread.create({
             text,
             author,
-            community: null,
+            community: communityIdObject,
         });
     
         await User.findByIdAndUpdate(author, {
             $push: { threads: createdThread._id },
         });
     
+        if (communityIdObject) {
+            // Update Community model
+            await Community.findByIdAndUpdate(communityIdObject, {
+              $push: { threads: createdThread._id },
+            });
+          }
+
         revalidatePath(path);
     } catch (e: any) {
         throw new Error(`Error creating thread: ${e.message}`);
