@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
     Form,
@@ -7,17 +7,17 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-  } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CommentValidation } from '@/lib/validations/thread';
-import { addCommentToThread } from "@/lib/actions/thread.actions";
+import { addCommentToThread } from '@/lib/actions/thread.actions';
 import * as z from 'zod';
-import { usePathname } from "next/navigation";
-import Image from "next/image";
+import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 type CommentProps = {
     threadId: string;
@@ -59,7 +59,7 @@ function Comment(props: CommentProps) {
                 onSubmit={form.handleSubmit(handleSubmit)} 
                 className="comment-form"
             >
-            <FormField
+                <FormField
                     control={form.control}
                     name="thread"
                     render={({ field }) => (

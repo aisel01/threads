@@ -1,13 +1,13 @@
-import UserCard from "@/components/cards/UserCard";
-import ProfileHeader from "@/components/shared/ProfileHeader";
-import TreadsTab from "@/components/shared/TreadsTab";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { communityTabs } from "@/constants";
-import { fetchCommunityDetails } from "@/lib/actions/community.actions";
-import { getUser } from "@/lib/actions/user.actions";
-import { currentUser } from "@clerk/nextjs";
-import Image from "next/image";
-import { redirect } from "next/navigation";
+import UserCard from '@/components/cards/UserCard';
+import ProfileHeader from '@/components/shared/ProfileHeader';
+import TreadsTab from '@/components/shared/TreadsTab';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { communityTabs } from '@/constants';
+import { fetchCommunityDetails } from '@/lib/actions/community.actions';
+import { getUser } from '@/lib/actions/user.actions';
+import { currentUser } from '@clerk/nextjs';
+import Image from 'next/image';
+import { redirect } from 'next/navigation';
 
 async function Page({ params }: { params: { id: string } }) {
     const user = await currentUser();

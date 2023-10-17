@@ -1,7 +1,7 @@
-import UserCard from "@/components/cards/UserCard";
-import { getUser, getUsers } from "@/lib/actions/user.actions";
-import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import UserCard from '@/components/cards/UserCard';
+import { getUser, getUsers } from '@/lib/actions/user.actions';
+import { currentUser } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
 
 const Page = async () => {
     const user = await currentUser();
@@ -48,6 +48,6 @@ const Page = async () => {
             </div>
         </section>
     );
-}
+};
 
 export default Page;
