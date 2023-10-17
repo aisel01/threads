@@ -8,7 +8,7 @@ function RightSidebar() {
                 <h3 className="text-heading4-medium text-light-1 ">Suggested users</h3>
             </div>
         </section>
-    )
+    );
 }
 
 export default RightSidebar;

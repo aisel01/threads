@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { sidebarLinks } from "@/constants";
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { sidebarLinks } from '@/constants';
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 function Bottombar() {
     const pathname = usePathname();
@@ -11,7 +11,7 @@ function Bottombar() {
     return (
         <section className="bottombar"> 
             <div className="bottombar_container">
-            {sidebarLinks.map(link => {
+                {sidebarLinks.map(link => {
                     const isActive = 
                         (pathname.includes(link.route) && link.route.length > 1) ||
                         pathname === link.route;
@@ -33,10 +33,10 @@ function Bottombar() {
                             </p>
                         </Link>
                     );
-            })}
+                })}
             </div>
         </section>
-    )
+    );
 }
 
 export default Bottombar;

@@ -1,7 +1,7 @@
-import PostThread from "@/components/forms/PostThread";
-import { getUser } from "@/lib/actions/user.actions";
-import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import PostThread from '@/components/forms/PostThread';
+import { getUser } from '@/lib/actions/user.actions';
+import { currentUser } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
 
 
 async function Page() {
@@ -24,7 +24,7 @@ async function Page() {
             </h1>
             <PostThread userId={userInfo._id} />
         </>
-    )
+    );
 }
 
 export default Page;

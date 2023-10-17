@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { ClerkProvider } from '@clerk/nextjs';
 import { Inter } from 'next/font/google';
 import Topbar from '@/components/shared/Topbar';
@@ -14,26 +16,26 @@ export const metadata = {
 
 const inter = Inter({
     subsets: ['latin'],
-})
+});
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <ClerkProvider>
             <html lang="en">
                 <body className={`${inter.className}`}>
-                  <Topbar />
-                  <main className="flex flex-row">
-                    <LeftSidebar />
-                    <section className="main-container">
-                      <div className="w-full max-w-4xl">
-                        {children}
-                      </div>
-                    </section>
-                    <RightSidebar />
-                  </main>
-                  <Bottombar />
+                    <Topbar />
+                    <main className="flex flex-row">
+                        <LeftSidebar />
+                        <section className="main-container">
+                            <div className="w-full max-w-4xl">
+                                {children}
+                            </div>
+                        </section>
+                        <RightSidebar />
+                    </main>
+                    <Bottombar />
                 </body>
             </html>
         </ClerkProvider>
-    )
+    );
 }

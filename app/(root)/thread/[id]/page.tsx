@@ -1,9 +1,9 @@
-import ThreadCard from "@/components/cards/ThreadCard";
-import Comment from "@/components/forms/Comment";
-import { getThread } from "@/lib/actions/thread.actions";
-import { getUser } from "@/lib/actions/user.actions";
-import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import ThreadCard from '@/components/cards/ThreadCard';
+import Comment from '@/components/forms/Comment';
+import { getThread } from '@/lib/actions/thread.actions';
+import { getUser } from '@/lib/actions/user.actions';
+import { currentUser } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
 
 async function Page({ params }: { params: { id: string } }) {
     if (!params.id) {
@@ -28,12 +28,12 @@ async function Page({ params }: { params: { id: string } }) {
         <section className="relative">
             <div>
                 <ThreadCard
-                  id={thread.id}
-                  content={thread.text}
-                  author={thread.author}
-                  createdAt={thread.createdAt}
-                  comments={thread.comments}
-                  community={thread.community}
+                    id={thread.id}
+                    content={thread.text}
+                    author={thread.author}
+                    createdAt={thread.createdAt}
+                    comments={thread.comments}
+                    community={thread.community}
                 />
             </div>
             <div className="mt-7">

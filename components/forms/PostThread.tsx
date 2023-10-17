@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
     Form,
@@ -7,17 +7,17 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-  } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ThreadValidation } from '@/lib/validations/thread';
-import { createThread } from "@/lib/actions/thread.actions";
+import { createThread } from '@/lib/actions/thread.actions';
 import * as z from 'zod';
-import { usePathname, useRouter } from "next/navigation";
-import { useOrganization } from "@clerk/nextjs";
+import { usePathname, useRouter } from 'next/navigation';
+import { useOrganization } from '@clerk/nextjs';
 
 
 
@@ -35,7 +35,7 @@ function PostThread({ userId }: { userId: string }) {
         }
     });
 
-    console.log({ organization })
+    console.log({ organization });
 
     const handleSubmit = async (values: z.infer<typeof ThreadValidation>) => {
         await createThread({
@@ -45,7 +45,7 @@ function PostThread({ userId }: { userId: string }) {
             path: pathname,
         });
 
-        router.push("/");
+        router.push('/');
     };
 
     return (
@@ -55,7 +55,7 @@ function PostThread({ userId }: { userId: string }) {
                     onSubmit={form.handleSubmit(handleSubmit)} 
                     className="mt-10 flex flex-col justify-start gap-10"
                 >
-                <FormField
+                    <FormField
                         control={form.control}
                         name="thread"
                         render={({ field }) => (

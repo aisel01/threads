@@ -1,8 +1,8 @@
-import { getActivity, getUser } from "@/lib/actions/user.actions";
-import { currentUser } from "@clerk/nextjs";
-import Link from "next/link";
-import Image from "next/image";
-import { redirect } from "next/navigation";
+import { getActivity, getUser } from '@/lib/actions/user.actions';
+import { currentUser } from '@clerk/nextjs';
+import Link from 'next/link';
+import Image from 'next/image';
+import { redirect } from 'next/navigation';
 
 const Page = async () => {
     const user = await currentUser();
@@ -47,7 +47,7 @@ const Page = async () => {
                                             <p className='!text-small-regular text-light-1'>
                                                 <span className='mr-1 text-primary-500'>
                                                     {a.author.name}
-                                                </span>{" "}
+                                                </span>{' '}
                                                 replied to your thread
                                             </p>
                                         </article>
@@ -60,7 +60,7 @@ const Page = async () => {
                     <p className="no-result">No activity</p>
                 )}
             </section>
-    </section>
+        </section>
     );
 };
   

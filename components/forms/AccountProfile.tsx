@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState } from 'react';
 import {
     Form,
     FormControl,
     FormField,
     FormItem,
     FormLabel,
-  } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { userValidation } from '@/lib/validations/user';
-import Image from "next/image";
+import Image from 'next/image';
 import * as z from 'zod';
-import { isBase64Image } from "@/lib/utils";
-import { useUploadThing } from "@/lib/uploadthing";
-import { updateUser } from "@/lib/actions/user.actions";
-import { usePathname, useRouter } from "next/navigation";
+import { isBase64Image } from '@/lib/utils';
+import { useUploadThing } from '@/lib/uploadthing';
+import { updateUser } from '@/lib/actions/user.actions';
+import { usePathname, useRouter } from 'next/navigation';
 
 
 type AccountProfileProps = {
@@ -61,8 +61,6 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
         if (hasImageChanged) {
             const imgRes = await startUpload(files);
 
-            debugger;
-
             if (imgRes && imgRes[0].url) {
                 values.profile_photo = imgRes[0].url;
             }
@@ -77,13 +75,14 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
             path: pathname, 
         });
 
-        if (pathname === "/profile/edit") {
+        if (pathname === '/profile/edit') {
             router.back();
         } else {
-            router.push("/");
+            router.push('/');
         }
     };
 
+    // eslint-disable-next-line no-unused-vars
     const handleImage = (e: ChangeEvent<HTMLInputElement>, fieldChange: (v: string) => void) => {
         e.preventDefault();
 
@@ -102,7 +101,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                 const imageDataUrl = event.target?.result?.toString() || '';
 
                 fieldChange(imageDataUrl);
-            }
+            };
 
             fileReader.readAsDataURL(file);
         }

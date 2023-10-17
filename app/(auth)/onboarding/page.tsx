@@ -1,7 +1,7 @@
-import AccountProfile from "@/components/forms/AccountProfile";
-import { getUser } from "@/lib/actions/user.actions";
-import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import AccountProfile from '@/components/forms/AccountProfile';
+import { getUser } from '@/lib/actions/user.actions';
+import { currentUser } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
 
 async function Page() {
     const user = await currentUser();

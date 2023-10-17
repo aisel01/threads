@@ -1,8 +1,8 @@
-import ThreadCard from "@/components/cards/ThreadCard";
-import { getThreads } from "@/lib/actions/thread.actions";
-import { getUser } from "@/lib/actions/user.actions";
-import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import ThreadCard from '@/components/cards/ThreadCard';
+import { getThreads } from '@/lib/actions/thread.actions';
+import { getUser } from '@/lib/actions/user.actions';
+import { currentUser } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
 
 async function Page() {
     const user = await currentUser();
@@ -17,7 +17,7 @@ async function Page() {
         redirect('/onboarding');
     }
     
-    const { threads, hasNext } = await getThreads();
+    const { threads } = await getThreads();
 
     return (
         <section className='flex flex-col gap-10'>

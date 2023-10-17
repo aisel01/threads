@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 let isConnected = false;
 
@@ -22,4 +22,4 @@ export const connectToDB = async () => {
     } catch (e) {
         console.log(e);
     }
-}
+};

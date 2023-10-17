@@ -1,16 +1,14 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
+import Image from 'next/image';
+import { Button } from '../ui/button';
+import { useRouter } from 'next/navigation';
 
 type UserCardProps = {
     id: string;
     name: string;
     username: string;
     imgUrl: string;
-    personType: string;
 }
 
 function UserCard(props: UserCardProps) {
@@ -19,7 +17,6 @@ function UserCard(props: UserCardProps) {
         name,
         username,
         imgUrl,
-        personType,
     } = props;
     
     const router = useRouter();

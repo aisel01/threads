@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from 'next/image';
 
 type ProfileHeaderProps = {
     accountId: string;
@@ -12,13 +12,10 @@ type ProfileHeaderProps = {
 
 function ProfileHeader(props: ProfileHeaderProps) {
     const {
-        accountId,
-        authUserId,
         name,
         username,
         imgUrl,
         bio, 
-        type = 'User',
     } = props;
 
     return (

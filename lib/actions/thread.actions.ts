@@ -1,11 +1,11 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
-import User from "../models/user.model";
-import { connectToDB } from "../mongoose";
-import { Error } from "mongoose";
-import Thread from "../models/thread.model";
-import Community from "../models/community.model";
+import { revalidatePath } from 'next/cache';
+import User from '../models/user.model';
+import { connectToDB } from '../mongoose';
+import { Error } from 'mongoose';
+import Thread from '../models/thread.model';
+import Community from '../models/community.model';
 
 type CreateThreadPayload = {
     text: string;
@@ -14,13 +14,6 @@ type CreateThreadPayload = {
     path: string;
 };
 
-type IThread = {
-    text: string;
-    author: string;
-    community: string;
-    createdAt: Date;
-}
-
 export async function getThreads(page = 1, pageSize = 20) {
     try {
         await connectToDB();
@@ -28,11 +21,11 @@ export async function getThreads(page = 1, pageSize = 20) {
         const skipAmount = (page - 1) * pageSize;
 
         const threads = await Thread.find({ parentId: { $in: [null, undefined] } })
-            .sort({ createdAt: "desc" })
+            .sort({ createdAt: 'desc' })
             .skip(skipAmount)
             .limit(pageSize)
             .populate({
-                path: "community",
+                path: 'community',
                 model: Community,
             })
             .populate({ path: 'author', model: User })
@@ -68,12 +61,12 @@ export async function getThread(id: string) {
             .populate({
                 path: 'community',
                 model: Community,
-                select: "_id id name image",
+                select: '_id id name image',
             })
             .populate({
                 path: 'author',
                 model: User,
-                select: "_id id name image"
+                select: '_id id name image'
             })
             .populate({
                 path: 'children',
@@ -81,7 +74,7 @@ export async function getThread(id: string) {
                     {
                         path: 'author',
                         model: User,
-                        select: "_id id name parentId image"
+                        select: '_id id name parentId image'
                     },
                     {
                         path: 'children',
@@ -89,13 +82,13 @@ export async function getThread(id: string) {
                         populate: {
                             path: 'author',
                             model: User,
-                            select: "_id id name image"
+                            select: '_id id name image'
                         }
                     }
                 ]
             }).exec();
     } catch (e: any) {
-        throw new Error(`Error getting thread: ${e.message}`)
+        throw new Error(`Error getting thread: ${e.message}`);
     }
 }
 
@@ -111,7 +104,7 @@ export async function createThread({
         const communityIdObject = await Community.findOne(
             { id: communityId },
             { _id: 1 }
-          );
+        );
           
         const createdThread = await Thread.create({
             text,
@@ -126,9 +119,9 @@ export async function createThread({
         if (communityIdObject) {
             // Update Community model
             await Community.findByIdAndUpdate(communityIdObject, {
-              $push: { threads: createdThread._id },
+                $push: { threads: createdThread._id },
             });
-          }
+        }
 
         revalidatePath(path);
     } catch (e: any) {
@@ -172,6 +165,6 @@ export async function addCommentToThread({
 
         revalidatePath(path);
     } catch (e: any) {
-        throw new Error(`Error getting thread: ${e.message}`)
+        throw new Error(`Error getting thread: ${e.message}`);
     }
 }

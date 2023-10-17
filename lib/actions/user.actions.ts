@@ -1,11 +1,11 @@
-"use server";
+'use server';
 
-import { revalidatePath } from "next/cache";
-import User from "../models/user.model";
-import { connectToDB } from "../mongoose";
-import { Error, FilterQuery, SortOrder } from "mongoose";
-import Thread from "../models/thread.model";
-import Community from "../models/community.model";
+import { revalidatePath } from 'next/cache';
+import User from '../models/user.model';
+import { connectToDB } from '../mongoose';
+import { Error, FilterQuery, SortOrder } from 'mongoose';
+import Thread from '../models/thread.model';
+import Community from '../models/community.model';
 
 type UpdateUserPayload = {
     userId: string;
@@ -37,23 +37,14 @@ export async function updateUser({
                 onboarded: true,
             },
             { upsert: true }
-        )
+        );
     
         if (path === '/profile/edit') {
             revalidatePath(path); 
         }
     } catch (e: any) {
-        throw new Error(`Failed to create/update user: ${e.message}`)
+        throw new Error(`Failed to create/update user: ${e.message}`);
     }
-}
-
-type IUser = {
-    id: string;
-    username: string;
-    name: string;
-    image: string;
-    bio: string;
-    onboarded: boolean;
 }
 
 export async function getUser(userId: string) {
@@ -65,9 +56,9 @@ export async function getUser(userId: string) {
             .populate({
                 path: 'communities',
                 model: Community
-            })
+            });
     } catch (e: any) {
-        throw new Error(`Failed to get user: ${e.message}`)
+        throw new Error(`Failed to get user: ${e.message}`);
     }
 }
 
@@ -87,16 +78,16 @@ export async function getUserPosts(userId: string) {
                         select: 'name image id',
                     },
                     {
-                        path: "community",
+                        path: 'community',
                         model: Community,
-                        select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
+                        select: 'name id image _id', // Select the "name" and "_id" fields from the "Community" model
                     },
                 ]
-            })
+            });
 
         return threads;
     } catch (e: any) {
-        throw new Error(`Failed to get user posts: ${e.message}`)
+        throw new Error(`Failed to get user posts: ${e.message}`);
     }
 }
 
@@ -130,7 +121,7 @@ export async function getUsers({
             query.$of = [
                 { username: { $regex: regex } },
                 { name: { $regex: regex } },
-            ]
+            ];
         }
 
         const sortOptions = {
@@ -154,7 +145,7 @@ export async function getUsers({
         };
         
     } catch (e: any) {
-        throw new Error(`Failed to get users: ${e.message}`)
+        throw new Error(`Failed to get users: ${e.message}`);
     }
 }
 
@@ -181,6 +172,6 @@ export async function getActivity(userId: string) {
 
         return replies;
     } catch (e: any) {
-        throw new Error(`Failed to get activity: ${e.message}`)
+        throw new Error(`Failed to get activity: ${e.message}`);
     }
 }
