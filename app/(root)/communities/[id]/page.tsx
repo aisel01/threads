@@ -89,7 +89,6 @@ async function Page({ params }: { params: { id: string } }) {
                                         name={member.name}
                                         username={member.username}
                                         imgUrl={member.image}
-                                        personType="User"
                                     />
                                 );
                             })}

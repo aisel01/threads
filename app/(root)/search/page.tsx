@@ -39,7 +39,6 @@ const Page = async () => {
                                     name={person.name}
                                     username={person.username}
                                     imgUrl={person.image}
-                                    personType="User"
                                 />
                             );
                         })}
