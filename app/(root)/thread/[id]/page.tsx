@@ -34,6 +34,7 @@ async function Page({ params }: { params: { id: string } }) {
                     createdAt={thread.createdAt}
                     comments={thread.children}
                     community={thread.community}
+                    canDelete={thread.author.id === userInfo.id}
                 />
             </div>
             <div className="mt-7">
@@ -54,6 +55,7 @@ async function Page({ params }: { params: { id: string } }) {
                         comments={comment.children}
                         community={comment.community}
                         isComment
+                        canDelete={comment.author.id === userInfo.id}
                     />
                 ))}
             </div>

@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -29,7 +30,10 @@ function UserPic(props: UserPicProps) {
                 src={image}
                 alt={`${name}'s profile image`}
                 fill
-                className={`cursor-pointer rounded-full object-cover ${className}`}
+                className={cn([
+                    'cursor-pointer rounded-full object-cover',
+                    className
+                ])}
             />
         </Link>
     );

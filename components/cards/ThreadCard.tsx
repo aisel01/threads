@@ -2,6 +2,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { formatDateString } from '@/lib/utils';
 import UserList from '../shared/UserList';
+import UserPic from '../shared/UserPic';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import DeleteThread from '../forms/DeleteThread';
 
 type Comment = {
     id: string;
@@ -29,6 +32,7 @@ type ThreadCardProps = {
     createdAt: string;
     comments: Comment[];
     isComment?: boolean;
+    canDelete?: boolean;
 }
 
 function ThreadCard(props: ThreadCardProps) {
@@ -36,30 +40,26 @@ function ThreadCard(props: ThreadCardProps) {
         id, 
         content,
         author,
-        isComment,
+        isComment = false,
         comments,
         community,
         createdAt,
+        canDelete = false,
     } = props;
     
     const showReplies = !isComment && comments.length > 0;
 
     return (
-        <article className={`flex w-full rounded-xl ${isComment ? 'px-0 xs:px-7' : 'bg-dark-2 p-7 ' } `}>
+        <article className={`flex w-full justify-between rounded-xl ${isComment ? 'px-0 xs:px-7' : 'bg-dark-2 p-7' }`}>
             <div className="flex items-start justify-between flex-col">
                 <div className="flex w-full flex-1 flex-row gap-4">
-                    <div className="flex flex-col items-center"> 
-                        <Link
-                            href={`/profile/${author.id}`}
-                            className="relative h-11 w-11"
-                        >
-                            <Image 
-                                src={author.image}
-                                alt="Profile image"
-                                fill
-                                className="cursor-pointer rounded-full object-cover"
-                            />
-                        </Link>
+                    <div className="flex flex-col items-center">
+                        <UserPic 
+                            id={author.id}
+                            name={author.name}
+                            image={author.image}
+                            size={44}
+                        />
                         {showReplies && <div className="thread-card_bar" />}
                     </div>
                     <div className="flex w-full flex-col">
@@ -133,7 +133,6 @@ function ThreadCard(props: ThreadCardProps) {
                     <Link
                         href={`/communities/${community.id}`}
                         className="mt-5 flex items-center"
-
                     >
                         <p className="text-subtle-medium text-gray-1">
                             {formatDateString(createdAt)} - {community.name} Community
@@ -148,6 +147,29 @@ function ThreadCard(props: ThreadCardProps) {
                     </Link>
                 )}
             </div>
+            {canDelete && (
+                <div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger>
+                            <Image 
+                                src="/assets/more.svg"
+                                alt="actions"
+                                width={24}
+                                height={24}
+                                className="cursor-pointer object-contain"
+                            />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem>
+                                <DeleteThread 
+                                    threadId={id}
+                                    isComment={isComment}
+                                />
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            )}
         </article>
     );
 }

@@ -35,6 +35,7 @@ async function Page() {
                                 createdAt={thread.createdAt}
                                 comments={thread.children}
                                 community={thread.community}
+                                canDelete={thread.author.id === userInfo.id}
                             />
                         );
                     })}
