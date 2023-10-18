@@ -75,7 +75,11 @@ export async function getUserPosts(userId: string) {
                     {
                         path: 'children',
                         model: Thread,
-                        select: 'name image id',
+                        populate: {
+                            path: 'author',
+                            model: User,
+                            select: '_id name image'
+                        },
                     },
                     {
                         path: 'community',

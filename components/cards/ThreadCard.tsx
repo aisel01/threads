@@ -1,6 +1,16 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { formatDateString } from '@/lib/utils';
+import UserList from '../shared/UserList';
+
+type Comment = {
+    id: string;
+    author: {
+        id: string;
+        name: string;
+        image: string;
+    }
+}
 
 type ThreadCardProps = {
     id: string;
@@ -17,7 +27,7 @@ type ThreadCardProps = {
         image: string;
     };
     createdAt: string;
-    comments: string[];
+    comments: Comment[];
     isComment?: boolean;
 }
 
@@ -29,9 +39,11 @@ function ThreadCard(props: ThreadCardProps) {
         isComment,
         comments,
         community,
-        createdAt,  
+        createdAt,
     } = props;
     
+    const showReplies = !isComment && comments.length > 0;
+
     return (
         <article className={`flex w-full rounded-xl ${isComment ? 'px-0 xs:px-7' : 'bg-dark-2 p-7 ' } `}>
             <div className="flex items-start justify-between flex-col">
@@ -45,10 +57,10 @@ function ThreadCard(props: ThreadCardProps) {
                                 src={author.image}
                                 alt="Profile image"
                                 fill
-                                className="cursor-pointer rounded-full"
+                                className="cursor-pointer rounded-full object-cover"
                             />
                         </Link>
-                        <div className="thread-card_bar" />
+                        {showReplies && <div className="thread-card_bar" />}
                     </div>
                     <div className="flex w-full flex-col">
                         <Link
@@ -97,18 +109,26 @@ function ThreadCard(props: ThreadCardProps) {
                                     className="cursor-pointer object-contain"
                                 />
                             </div>
-                            {isComment && comments.length > 0 && (
-                                <Link
-                                    href={`/tread/${id}`}
-                                >
-                                    <p className="mt-1 text-subtitle-medium text-gray-1">
-                                        {comments.length} replies
-                                    </p>
-                                </Link>
-                            )}
                         </div>
                     </div>
                 </div>
+                {showReplies && (
+                    <div className="mt-2 flex gap-4">
+                        <div className='w-11 flex justify-center'>
+                            <UserList
+                                size={18}
+                                users={comments.map(comment => comment.author)}
+                            />
+                        </div>
+                        <Link
+                            href={`/tread/${id}`}
+                        >
+                            <p className="text-small-regular text-gray-1">
+                                {comments.length} replies
+                            </p>
+                        </Link>
+                    </div>
+                )}
                 {!isComment && community && (
                     <Link
                         href={`/communities/${community.id}`}

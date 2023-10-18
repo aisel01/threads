@@ -26,12 +26,10 @@ async function TreadsTab(props: TreadsTabProps) {
     if (!result) {
         redirect('/');
     }
-
     
     return (
         <section className="mt-9 flex flex-col gap-10">
             {result.threads.map((thread: any) => {
-                console.log({ thread });
                 return (
                     <ThreadCard 
                         key={thread.id}
@@ -52,7 +50,7 @@ async function TreadsTab(props: TreadsTabProps) {
                                 : thread.community
                         }
                         createdAt={thread.createdAt}
-                        comments={thread.comments}
+                        comments={thread.children}
                     />
                 );
             })}

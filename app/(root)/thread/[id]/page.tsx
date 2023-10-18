@@ -32,7 +32,7 @@ async function Page({ params }: { params: { id: string } }) {
                     content={thread.text}
                     author={thread.author}
                     createdAt={thread.createdAt}
-                    comments={thread.comments}
+                    comments={thread.children}
                     community={thread.community}
                 />
             </div>

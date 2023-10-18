@@ -33,7 +33,7 @@ async function Page() {
                                 content={thread.text}
                                 author={thread.author}
                                 createdAt={thread.createdAt}
-                                comments={thread.comments}
+                                comments={thread.children}
                                 community={thread.community}
                             />
                         );
