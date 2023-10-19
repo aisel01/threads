@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint && tsc --noEmit"
+    "lint": "next lint && tsc --noEmit",
+    "lint:ts": "tsc --noEmit",
+    "lint:style": "next lint"
   },
   "dependencies": {
     "@clerk/nextjs": "4.24.1",

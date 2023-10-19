@@ -28,7 +28,7 @@ export async function updateUser({
         await connectToDB();
 
         await User.findOneAndUpdate(
-            { id: userId }, 
+            { id: userId },
             {
                 username: username.toLowerCase(),
                 name,
@@ -38,9 +38,9 @@ export async function updateUser({
             },
             { upsert: true }
         );
-    
+
         if (path === '/profile/edit') {
-            revalidatePath(path); 
+            revalidatePath(path);
         }
     } catch (e: any) {
         throw new Error(`Failed to create/update user: ${e.message}`);
@@ -65,7 +65,7 @@ export async function getUser(userId: string) {
 export async function getUserPosts(userId: string) {
     try {
         await connectToDB();
-       
+
         const threads = await User
             .findOne({ id: userId })
             .populate({
@@ -95,7 +95,7 @@ export async function getUserPosts(userId: string) {
     }
 }
 
-type GetUsersPayload = { 
+type GetUsersPayload = {
     userId: string;
     searchString?: string;
     page?: number;
@@ -106,13 +106,13 @@ type GetUsersPayload = {
 export async function getUsers({
     userId,
     searchString = '',
-    page = 1, 
+    page = 1,
     pageSize = 20,
     sortBy = 'desc',
 }: GetUsersPayload) {
     try {
         await connectToDB();
-       
+
         const skipAmount = (page - 1) * pageSize;
 
         const regex = new RegExp(searchString, 'i');
@@ -147,7 +147,7 @@ export async function getUsers({
             users,
             hasNext,
         };
-        
+
     } catch (e: any) {
         throw new Error(`Failed to get users: ${e.message}`);
     }
@@ -156,7 +156,7 @@ export async function getUsers({
 export async function getActivity(userId: string) {
     try {
         await connectToDB();
-        
+
         const userThreads = await Thread.find({
             author: userId
         });

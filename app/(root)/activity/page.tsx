@@ -10,13 +10,13 @@ const Page = async () => {
     if (!user) {
         return null;
     }
-  
+
     const userInfo = await getUser(user.id);
-  
+
     if (!userInfo?.onboarded) {
         redirect('/onboarding');
     }
-    
+
     const activity = await getActivity(userInfo._id);
 
     return (
@@ -41,7 +41,7 @@ const Page = async () => {
                                                 src={a.author.image}
                                                 width={20}
                                                 height={20}
-                                                className="rounded-full object-cover" 
+                                                className="rounded-full object-cover"
                                                 style={{ height: 20 }}
                                             />
                                             <p className='!text-small-regular text-light-1'>
@@ -63,5 +63,5 @@ const Page = async () => {
         </section>
     );
 };
-  
+
 export default Page;

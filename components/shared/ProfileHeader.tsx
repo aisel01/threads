@@ -15,7 +15,7 @@ function ProfileHeader(props: ProfileHeaderProps) {
         name,
         username,
         imgUrl,
-        bio, 
+        bio,
     } = props;
 
     return (
@@ -23,7 +23,7 @@ function ProfileHeader(props: ProfileHeaderProps) {
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <div className="relative w-20 h-20">
-                        <Image 
+                        <Image
                             src={imgUrl}
                             alt="Profile image"
                             className="rounded-full object-cover shadow-2xl"

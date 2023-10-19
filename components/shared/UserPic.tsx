@@ -26,7 +26,7 @@ function UserPic(props: UserPicProps) {
             style={{ width: size, height: size }}
             title={name}
         >
-            <Image 
+            <Image
                 src={image}
                 alt={`${name}'s profile image`}
                 fill

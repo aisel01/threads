@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const threadSchema = new mongoose.Schema({
     // id: { type: String, required: true },
     text: { type: String, required: true },
-    author: { 
+    author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,

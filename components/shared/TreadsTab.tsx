@@ -26,12 +26,12 @@ async function TreadsTab(props: TreadsTabProps) {
     if (!result) {
         redirect('/');
     }
-    
+
     return (
         <section className="mt-9 flex flex-col gap-10">
             {result.threads.map((thread: any) => {
                 return (
-                    <ThreadCard 
+                    <ThreadCard
                         key={thread.id}
                         id={thread.id}
                         content={thread.text}

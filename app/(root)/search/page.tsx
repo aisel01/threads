@@ -9,13 +9,13 @@ const Page = async () => {
     if (!user) {
         return null;
     }
-  
+
     const userInfo = await getUser(user.id);
-  
+
     if (!userInfo?.onboarded) {
         redirect('/onboarding');
     }
-    
+
     const result = await getUsers({
         userId: userInfo.id,
         searchString: '',
@@ -33,7 +33,7 @@ const Page = async () => {
                     <>
                         {result.users.map((person) => {
                             return (
-                                <UserCard 
+                                <UserCard
                                     key={person.id}
                                     id={person.id}
                                     name={person.name}

@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 function Topbar() {
     return (
-        <nav className="topbar"> 
+        <nav className="topbar">
             <Link href="/" className="flex item-center gap-4">
                 <Image src="/assets/logo.svg" alt="logo" width={28} height={28} />
                 <p className="text-heading3-bold text-light-1 max-xs:hidden"> Threads</p>
@@ -17,7 +17,7 @@ function Topbar() {
                     <SignedIn>
                         <SignOutButton>
                             <div className="flex cursor-pointer">
-                                <Image 
+                                <Image
                                     alt="logout"
                                     src="/assets/logout.svg"
                                     width={24}
@@ -28,7 +28,7 @@ function Topbar() {
                     </SignedIn>
                 </div>
 
-                <OrganizationSwitcher 
+                <OrganizationSwitcher
                     appearance={{
                         baseTheme: dark,
                         elements: {

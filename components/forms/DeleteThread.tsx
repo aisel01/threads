@@ -14,14 +14,14 @@ type DeleteThreadProps = {
 
 
 function DeleteThread(props: DeleteThreadProps) {
-    const { 
+    const {
         threadId,
         isComment,
     } = props;
 
     const pathname = usePathname();
     const router = useRouter();
-    
+
     const form = useForm();
 
     const handleSubmit = async () => {
@@ -36,7 +36,7 @@ function DeleteThread(props: DeleteThreadProps) {
 
         form.reset();
     };
- 
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)}>

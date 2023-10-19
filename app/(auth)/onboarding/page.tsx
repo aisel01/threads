@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 
 async function Page() {
     const user = await currentUser();
-    
+
     if (!user) {
         return null;
     }
@@ -15,14 +15,14 @@ async function Page() {
     if (userInfo?.onboarded) {
         redirect('/');
     }
-    
+
     const userData = {
         id: user?.id || '',
         objectId: userInfo?.id || '',
         username: userInfo?.username || user?.username || '',
         name: userInfo?.name || user?.firstName || '',
         bio: userInfo?.bio || '',
-        image: userInfo?.image || user?.imageUrl, 
+        image: userInfo?.image || user?.imageUrl,
     };
 
     return (
@@ -32,7 +32,7 @@ async function Page() {
                 Complete your profile now to use Threads
             </p>
             <section className="mt-9 bg-dark-2 p-10">
-                <AccountProfile 
+                <AccountProfile
                     user={userData}
                     btnTitle="Submit"
                 />

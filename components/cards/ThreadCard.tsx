@@ -37,7 +37,7 @@ type ThreadCardProps = {
 
 function ThreadCard(props: ThreadCardProps) {
     const {
-        id, 
+        id,
         content,
         author,
         isComment = false,
@@ -46,7 +46,7 @@ function ThreadCard(props: ThreadCardProps) {
         createdAt,
         canDelete = false,
     } = props;
-    
+
     const showReplies = !isComment && comments.length > 0;
 
     return (
@@ -54,7 +54,7 @@ function ThreadCard(props: ThreadCardProps) {
             <div className="flex items-start justify-between flex-col">
                 <div className="flex w-full flex-1 flex-row gap-4">
                     <div className="flex flex-col items-center">
-                        <UserPic 
+                        <UserPic
                             id={author.id}
                             name={author.name}
                             image={author.image}
@@ -76,7 +76,7 @@ function ThreadCard(props: ThreadCardProps) {
                         </p>
                         <div className={`${isComment && 'mb-10'} mt-5 flex flex-col gap-3`}>
                             <div className="flex gap-3.5">
-                                <Image 
+                                <Image
                                     src="/assets/heart-gray.svg"
                                     alt="heart"
                                     width={24}
@@ -86,7 +86,7 @@ function ThreadCard(props: ThreadCardProps) {
                                 <Link
                                     href={`/thread/${id}`}
                                 >
-                                    <Image 
+                                    <Image
                                         src="/assets/reply.svg"
                                         alt="reply"
                                         width={24}
@@ -94,14 +94,14 @@ function ThreadCard(props: ThreadCardProps) {
                                         className="cursor-pointer object-contain"
                                     />
                                 </Link>
-                                <Image 
+                                <Image
                                     src="/assets/repost.svg"
                                     alt="repost"
                                     width={24}
                                     height={24}
                                     className="cursor-pointer object-contain"
                                 />
-                                <Image 
+                                <Image
                                     src="/assets/share.svg"
                                     alt="share"
                                     width={24}
@@ -151,7 +151,7 @@ function ThreadCard(props: ThreadCardProps) {
                 <div>
                     <DropdownMenu>
                         <DropdownMenuTrigger>
-                            <Image 
+                            <Image
                                 src="/assets/more.svg"
                                 alt="actions"
                                 width={24}
@@ -161,7 +161,7 @@ function ThreadCard(props: ThreadCardProps) {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuItem>
-                                <DeleteThread 
+                                <DeleteThread
                                     threadId={id}
                                     isComment={isComment}
                                 />

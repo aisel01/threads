@@ -18,13 +18,13 @@ function UserCard(props: UserCardProps) {
         username,
         imgUrl,
     } = props;
-    
+
     const router = useRouter();
 
     return (
         <article className="user-card w-full">
             <div className="user-card_avatar">
-                <Image 
+                <Image
                     src={imgUrl}
                     alt="logo"
                     width={48}

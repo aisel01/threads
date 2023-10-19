@@ -19,7 +19,7 @@ function UserList(props: UserListProps) {
 
     return (
         <div className="flex -space-x-2 overflow-hidden">
-            {users.slice(0, maxShown).map(user => { 
+            {users.slice(0, maxShown).map(user => {
                 return (
                     <UserPic
                         className="ring-2 ring-dark-1"

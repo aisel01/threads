@@ -16,7 +16,7 @@ async function Page() {
     if (!userInfo?.onboarded) {
         redirect('/onboarding');
     }
-    
+
     const { threads } = await getThreads();
 
     return (

@@ -15,7 +15,7 @@ async function Page({ params }: { params: { id: string } }) {
     if (!user) {
         return null;
     }
-    
+
     const userInfo = await getUser(user.id);
 
     if (!userInfo?.onboarded) {
@@ -38,7 +38,7 @@ async function Page({ params }: { params: { id: string } }) {
                 />
             </div>
             <div className="mt-7">
-                <Comment 
+                <Comment
                     threadId={thread.id}
                     currentUserId={JSON.stringify(userInfo._id)}
                     currentUserImg={userInfo.image}

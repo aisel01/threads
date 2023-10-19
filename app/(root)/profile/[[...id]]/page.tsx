@@ -13,31 +13,31 @@ async function Page({ params }: { params: { id?: string } }) {
     if (!user) {
         return null;
     }
-    
+
     const authUserInfo = await getUser(user.id);
-    
+
     if (!authUserInfo?.onboarded) {
         redirect('/onboarding');
     }
 
     let userInfo = authUserInfo;
-    
+
     if (params.id) {
         userInfo = await getUser(params.id);
     }
 
     return (
         <section className="relative">
-            <ProfileHeader 
+            <ProfileHeader
                 accountId={userInfo.id}
                 authUserId={authUserInfo.id}
                 name={userInfo.name}
                 username={userInfo.username}
                 imgUrl={userInfo.image}
-                bio={userInfo.bio} 
+                bio={userInfo.bio}
             />
             <div className="mt-5">
-                <Tabs 
+                <Tabs
                     className="w-full"
                     defaultValue="threads"
                 >
@@ -49,7 +49,7 @@ async function Page({ params }: { params: { id?: string } }) {
                                     value={tab.value}
                                     className="tab"
                                 >
-                                    <Image 
+                                    <Image
                                         src={tab.icon}
                                         alt={tab.label}
                                         width={16}
@@ -76,7 +76,7 @@ async function Page({ params }: { params: { id?: string } }) {
                                 className="w-full text-light-1"
                             >
                                 {tab.value === 'threads' && (
-                                    <TreadsTab 
+                                    <TreadsTab
                                         accountId={userInfo.id}
                                         authUserId={authUserInfo.id}
                                         accountType="User"

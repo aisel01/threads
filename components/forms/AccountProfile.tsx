@@ -72,7 +72,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
             name: values.name,
             image: values.profile_photo,
             bio: values.bio,
-            path: pathname, 
+            path: pathname,
         });
 
         if (pathname === '/profile/edit') {
@@ -88,7 +88,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
 
         const fileReader = new FileReader();
 
-        if (e.target.files && e.target.files.length > 0) { 
+        if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
 
             if (!file.type.includes('image')) {
@@ -110,8 +110,8 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
     return (
         <div>
             <Form {...form}>
-                <form 
-                    onSubmit={form.handleSubmit(handleSubmit)} 
+                <form
+                    onSubmit={form.handleSubmit(handleSubmit)}
                     className="flex flex-col justify-start gap-10"
                 >
                     <FormField
@@ -140,7 +140,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                                     )}
                                 </FormLabel>
                                 <FormControl className="flex-1 text-base-semibold text-gray-200">
-                                    <Input 
+                                    <Input
                                         type="file"
                                         accept="image/*"
                                         placeholder="Upload a photo"
@@ -160,7 +160,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                                     Name
                                 </FormLabel>
                                 <FormControl>
-                                    <Input 
+                                    <Input
                                         type="text"
                                         className="account-form_input no-focus"
                                         {...field}
@@ -178,7 +178,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                                     Username
                                 </FormLabel>
                                 <FormControl>
-                                    <Input 
+                                    <Input
                                         type="text"
                                         className="account-form_input no-focus"
                                         {...field}
@@ -196,7 +196,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                                     Bio
                                 </FormLabel>
                                 <FormControl>
-                                    <Textarea 
+                                    <Textarea
                                         rows={10}
                                         className="account-form_input no-focus"
                                         {...field}
@@ -205,7 +205,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                             </FormItem>
                         )}
                     />
-                    <Button 
+                    <Button
                         type="submit"
                         className="bg-primary-500"
                     >

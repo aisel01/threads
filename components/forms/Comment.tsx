@@ -27,7 +27,7 @@ type CommentProps = {
 
 
 function Comment(props: CommentProps) {
-    const { 
+    const {
         threadId,
         currentUserImg,
         currentUserId,
@@ -52,11 +52,11 @@ function Comment(props: CommentProps) {
 
         form.reset();
     };
- 
+
     return (
         <Form {...form}>
             <form
-                onSubmit={form.handleSubmit(handleSubmit)} 
+                onSubmit={form.handleSubmit(handleSubmit)}
                 className="comment-form"
             >
                 <FormField
@@ -65,7 +65,7 @@ function Comment(props: CommentProps) {
                     render={({ field }) => (
                         <FormItem className="flex w-full items-center gap-3">
                             <FormLabel>
-                                <Image 
+                                <Image
                                     src={currentUserImg}
                                     alt="Profile image"
                                     width={48}
@@ -84,7 +84,7 @@ function Comment(props: CommentProps) {
                         </FormItem>
                     )}
                 />
-                <Button 
+                <Button
                     type="submit"
                     className="comment-form_btn"
                 >

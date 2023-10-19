@@ -26,16 +26,16 @@ async function Page({ params }: { params: { id: string } }) {
 
     return (
         <section className="relative">
-            <ProfileHeader 
+            <ProfileHeader
                 accountId={userInfo.id}
                 authUserId={userInfo.id}
                 name={communityDetails.name}
                 username={communityDetails.username}
                 imgUrl={communityDetails.image}
-                bio={communityDetails.bio} 
+                bio={communityDetails.bio}
             />
             <div className="mt-5">
-                <Tabs 
+                <Tabs
                     className="w-full"
                     defaultValue="threads"
                 >
@@ -47,7 +47,7 @@ async function Page({ params }: { params: { id: string } }) {
                                     value={tab.value}
                                     className="tab"
                                 >
-                                    <Image 
+                                    <Image
                                         src={tab.icon}
                                         alt={tab.label}
                                         width={16}
@@ -70,7 +70,7 @@ async function Page({ params }: { params: { id: string } }) {
                         value="threads"
                         className="w-full text-light-1"
                     >
-                        <TreadsTab 
+                        <TreadsTab
                             accountId={communityDetails._id}
                             authUserId={userInfo.id}
                             accountType="Community"
@@ -83,7 +83,7 @@ async function Page({ params }: { params: { id: string } }) {
                         <section className="mt-9 flex flex-col gap-10">
                             {communityDetails?.members.map((member: any) => {
                                 return (
-                                    <UserCard 
+                                    <UserCard
                                         key={member.id}
                                         id={member.id}
                                         name={member.name}
