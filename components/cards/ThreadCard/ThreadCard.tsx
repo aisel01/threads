@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { formatDateString } from '@/lib/utils';
-import UserList from '../shared/UserList';
-import UserPic from '../shared/UserPic';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import DeleteThread from '../forms/DeleteThread';
+import UserList from '../../shared/UserList';
+import UserPic from '../../shared/UserPic';
+import ThreadCardMore from './ThreadCardMore';
+import ThreadCardActions from './ThreadCardActions';
 
 type Comment = {
     id: string;
@@ -74,42 +74,10 @@ function ThreadCard(props: ThreadCardProps) {
                         <p className="mt-2 text-small-regular text-light-2">
                             {content}
                         </p>
-                        <div className={`${isComment && 'mb-10'} mt-5 flex flex-col gap-3`}>
-                            <div className="flex gap-3.5">
-                                <Image
-                                    src="/assets/heart-gray.svg"
-                                    alt="heart"
-                                    width={24}
-                                    height={24}
-                                    className="cursor-pointer object-contain"
-                                />
-                                <Link
-                                    href={`/thread/${id}`}
-                                >
-                                    <Image
-                                        src="/assets/reply.svg"
-                                        alt="reply"
-                                        width={24}
-                                        height={24}
-                                        className="cursor-pointer object-contain"
-                                    />
-                                </Link>
-                                <Image
-                                    src="/assets/repost.svg"
-                                    alt="repost"
-                                    width={24}
-                                    height={24}
-                                    className="cursor-pointer object-contain"
-                                />
-                                <Image
-                                    src="/assets/share.svg"
-                                    alt="share"
-                                    width={24}
-                                    height={24}
-                                    className="cursor-pointer object-contain"
-                                />
-                            </div>
-                        </div>
+                        <ThreadCardActions
+                            id={id}
+                            isComment={isComment}
+                        />
                     </div>
                 </div>
                 {showReplies && (
@@ -148,30 +116,14 @@ function ThreadCard(props: ThreadCardProps) {
                 )}
             </div>
             {canDelete && (
-                <div>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger>
-                            <Image
-                                src="/assets/more.svg"
-                                alt="actions"
-                                width={24}
-                                height={24}
-                                className="cursor-pointer object-contain"
-                            />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
-                                <DeleteThread
-                                    threadId={id}
-                                    isComment={isComment}
-                                />
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
+                <ThreadCardMore
+                    id={id}
+                    isComment={isComment}
+                />
             )}
         </article>
     );
 }
 
 export default ThreadCard;
+

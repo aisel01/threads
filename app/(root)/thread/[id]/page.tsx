@@ -1,4 +1,4 @@
-import ThreadCard from '@/components/cards/ThreadCard';
+import ThreadCard from '@/components/cards/ThreadCard/ThreadCard';
 import Comment from '@/components/forms/Comment';
 import { getThread } from '@/lib/actions/thread.actions';
 import { getUser } from '@/lib/actions/user.actions';

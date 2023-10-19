@@ -1,6 +1,6 @@
 import { getUserPosts } from '@/lib/actions/user.actions';
 import { redirect } from 'next/navigation';
-import ThreadCard from '../cards/ThreadCard';
+import ThreadCard from '../cards/ThreadCard/ThreadCard';
 import { fetchCommunityPosts } from '@/lib/actions/community.actions';
 
 type TreadsTabProps = {
