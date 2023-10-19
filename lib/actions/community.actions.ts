@@ -3,19 +3,29 @@
 import { FilterQuery, SortOrder } from 'mongoose';
 
 import Community from '../models/community.model';
-import Thread from '../models/thread.model';
-import User from '../models/user.model';
+import Thread, { IThread } from '../models/thread.model';
+import User, { IUser } from '../models/user.model';
 
 import { connectToDB } from '../mongoose';
 
-export async function createCommunity(
+
+type CreateCommunityPayload = {
     id: string,
     name: string,
     username: string,
     image: string,
     bio: string,
-    creatorId: string // Change the parameter name to reflect it's an id
-) {
+    creatorId: string,
+};
+
+export async function createCommunity({
+    id,
+    name,
+    username,
+    image,
+    bio,
+    creatorId,
+}: CreateCommunityPayload) {
     try {
         connectToDB();
 
@@ -27,17 +37,18 @@ export async function createCommunity(
         }
 
         const newCommunity = new Community({
-            id,
+            clerkId: id,
             name,
             username,
             image,
             bio,
-            createdBy: user._id, // Use the mongoose ID of the user
+            createdBy: user.id,
         });
 
         const createdCommunity = await newCommunity.save();
 
-        user.communities.push(createdCommunity._id);
+        user.communities.push(createdCommunity.id);
+
         await user.save();
 
         return createdCommunity;
@@ -51,18 +62,22 @@ export async function fetchCommunityDetails(id: string) {
     try {
         connectToDB();
 
-        const communityDetails = await Community.findOne({ id }).populate([
-            'createdBy',
-            {
-                path: 'members',
-                model: User,
-                select: 'name username image _id id',
-            },
-        ]);
+        const communityDetails = await Community
+            .findOne({ id })
+            .populate<{
+                createdBy: IUser,
+                members: Array<Pick<IUser, 'name' | 'username' | 'image' | 'id'>>
+            }>([
+                'createdBy',
+                {
+                    path: 'members',
+                    model: User,
+                    select: 'name username image _id id',
+                },
+            ]);
 
         return communityDetails;
     } catch (error) {
-    // Handle any errors
         console.error('Error fetching community details:', error);
         throw error;
     }
@@ -72,30 +87,36 @@ export async function fetchCommunityPosts(id: string) {
     try {
         connectToDB();
 
-        const communityPosts = await Community.findById(id).populate({
-            path: 'threads',
-            model: Thread,
-            populate: [
-                {
-                    path: 'author',
-                    model: User,
-                    select: 'name image id', // Select the "name" and "_id" fields from the "User" model
-                },
-                {
-                    path: 'children',
-                    model: Thread,
-                    populate: {
+        const communityPosts = await Community
+            .findById(id)
+            .populate<{
+                threads: Array<IThread & {
+                    author: Pick<IUser, 'id' | 'name' | 'image'>
+                    children: IThread & { author: Pick<IUser, 'id' | 'name' | 'image'> }
+                }>,
+            }>({
+                path: 'threads',
+                model: Thread,
+                populate: [
+                    {
                         path: 'author',
                         model: User,
-                        select: 'image _id name', // Select the "name" and "_id" fields from the "User" model
+                        select: 'name image id',
                     },
-                },
-            ],
-        });
+                    {
+                        path: 'children',
+                        model: Thread,
+                        populate: {
+                            path: 'author',
+                            model: User,
+                            select: 'name image id',
+                        },
+                    },
+                ],
+            });
 
         return communityPosts;
     } catch (error) {
-    // Handle any errors
         console.error('Error fetching community posts:', error);
         throw error;
     }
@@ -140,7 +161,7 @@ export async function fetchCommunities({
             .sort(sortOptions)
             .skip(skipAmount)
             .limit(pageSize)
-            .populate('members');
+            .populate<{ members: IUser[] }>('members');
 
         // Count the total number of communities that match the search criteria (without pagination).
         const totalCommunitiesCount = await Community.countDocuments(query);
@@ -164,15 +185,14 @@ export async function addMemberToCommunity(
     try {
         connectToDB();
 
-        // Find the community by its unique id
-        const community = await Community.findOne({ id: communityId });
+        const community = await Community.findOne({ clerkId: communityId });
 
         if (!community) {
             throw new Error('Community not found');
         }
 
         // Find the user by their unique id
-        const user = await User.findOne({ id: memberId });
+        const user = await User.findOne({ clerkId: memberId });
 
         if (!user) {
             throw new Error('User not found');
@@ -193,7 +213,6 @@ export async function addMemberToCommunity(
 
         return community;
     } catch (error) {
-    // Handle any errors
         console.error('Error adding member to community:', error);
         throw error;
     }
@@ -206,9 +225,9 @@ export async function removeUserFromCommunity(
     try {
         connectToDB();
 
-        const userIdObject = await User.findOne({ id: userId }, { _id: 1 });
+        const userIdObject = await User.findOne({ clerkId: userId }, { _id: 1 });
         const communityIdObject = await Community.findOne(
-            { id: communityId },
+            { clerkId: communityId },
             { _id: 1 }
         );
 
@@ -234,7 +253,6 @@ export async function removeUserFromCommunity(
 
         return { success: true };
     } catch (error) {
-    // Handle any errors
         console.error('Error removing user from community:', error);
         throw error;
     }
@@ -249,9 +267,8 @@ export async function updateCommunityInfo(
     try {
         connectToDB();
 
-        // Find the community by its _id and update the information
         const updatedCommunity = await Community.findOneAndUpdate(
-            { id: communityId },
+            { clerkId: communityId },
             { name, username, image }
         );
 
@@ -261,7 +278,6 @@ export async function updateCommunityInfo(
 
         return updatedCommunity;
     } catch (error) {
-    // Handle any errors
         console.error('Error updating community information:', error);
         throw error;
     }
@@ -271,9 +287,8 @@ export async function deleteCommunity(communityId: string) {
     try {
         connectToDB();
 
-        // Find the community by its ID and delete it
         const deletedCommunity = await Community.findOneAndDelete({
-            id: communityId,
+            clerkId: communityId,
         });
 
         if (!deletedCommunity) {
@@ -281,15 +296,17 @@ export async function deleteCommunity(communityId: string) {
         }
 
         // Delete all threads associated with the community
-        await Thread.deleteMany({ community: communityId });
+        await Thread.deleteMany({ community: deletedCommunity._id });
 
         // Find all users who are part of the community
-        const communityUsers = await User.find({ communities: communityId });
+        const communityUsers = await User.find({ communities: deletedCommunity._id });
 
         // Remove the community from the 'communities' array for each user
         const updateUserPromises = communityUsers.map((user) => {
-            user.communities.pull(communityId);
-            return user.save();
+            return User.updateOne(
+                { _id: user._id },
+                { $pull: { communities: deletedCommunity._id } }
+            );
         });
 
         await Promise.all(updateUserPromises);

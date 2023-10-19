@@ -20,10 +20,14 @@ async function Page({ params }: { params: { id?: string } }) {
         redirect('/onboarding');
     }
 
-    let userInfo = authUserInfo;
+    let userInfo: typeof authUserInfo | null = authUserInfo;
 
     if (params.id) {
         userInfo = await getUser(params.id);
+    }
+
+    if (!userInfo) {
+        return null;
     }
 
     return (
@@ -77,7 +81,7 @@ async function Page({ params }: { params: { id?: string } }) {
                             >
                                 {tab.value === 'threads' && (
                                     <TreadsTab
-                                        accountId={userInfo.id}
+                                        accountId={userInfo?.id}
                                         authUserId={authUserInfo.id}
                                         accountType="User"
                                     />

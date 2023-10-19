@@ -17,7 +17,7 @@ const Page = async () => {
         redirect('/onboarding');
     }
 
-    const activity = await getActivity(userInfo._id);
+    const activity = await getActivity(userInfo.id);
 
     return (
         <section>
@@ -31,7 +31,7 @@ const Page = async () => {
                             activity.map(a => {
                                 return (
                                     <Link
-                                        key={a._id}
+                                        key={a.id}
                                         href={`/thread/${a.parentId}`}
                                         className=""
                                     >

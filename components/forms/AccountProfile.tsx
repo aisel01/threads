@@ -25,8 +25,8 @@ import { usePathname, useRouter } from 'next/navigation';
 
 type AccountProfileProps = {
     user: {
-        id: string;
-        objectId: string;
+        id?: string;
+        clerkId: string;
         name: string;
         username: string;
         bio: string;
@@ -67,7 +67,8 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
         }
 
         await updateUser({
-            userId: user.id,
+            id: user.id,
+            clerkId: user.clerkId,
             username: values.username,
             name: values.name,
             image: values.profile_photo,

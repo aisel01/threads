@@ -1,7 +1,17 @@
-import mongoose from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
 
-const threadSchema = new mongoose.Schema({
-    // id: { type: String, required: true },
+export interface IThread {
+    _id: Types.ObjectId;
+    id: string;
+    text: string;
+    author: Types.ObjectId;
+    community: Types.ObjectId;
+    createdAt: Date;
+    parentId: string;
+    children: Types.ObjectId[];
+}
+
+const threadSchema = new mongoose.Schema<IThread>({
     text: { type: String, required: true },
     author: {
         type: mongoose.Schema.Types.ObjectId,
@@ -27,7 +37,7 @@ const threadSchema = new mongoose.Schema({
     ]
 });
 
-const Thread = mongoose.models.Thread || mongoose.model('Thread', threadSchema);
+const Thread: Model<IThread> = mongoose.models.Thread || mongoose.model('Thread', threadSchema);
 
 export default Thread;
 

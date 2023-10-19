@@ -24,6 +24,10 @@ async function Page({ params }: { params: { id: string } }) {
 
     const thread = await getThread(params.id);
 
+    if (!thread) {
+        return null;
+    }
+
     return (
         <section className="relative">
             <div>
@@ -40,7 +44,7 @@ async function Page({ params }: { params: { id: string } }) {
             <div className="mt-7">
                 <Comment
                     threadId={thread.id}
-                    currentUserId={JSON.stringify(userInfo._id)}
+                    currentUserId={userInfo.id}
                     currentUserImg={userInfo.image}
                 />
             </div>

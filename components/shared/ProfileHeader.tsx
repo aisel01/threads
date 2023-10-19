@@ -1,13 +1,13 @@
 import Image from 'next/image';
 
 type ProfileHeaderProps = {
-    accountId: string;
     authUserId: string;
+    accountId: string;
+    accountType?: 'User' | 'Community';
     name: string;
     username: string;
     imgUrl: string;
     bio: string;
-    type?: 'User' | 'Community';
 }
 
 function ProfileHeader(props: ProfileHeaderProps) {

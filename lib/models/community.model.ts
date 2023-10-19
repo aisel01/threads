@@ -1,7 +1,19 @@
-import mongoose from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
 
-const communitySchema = new mongoose.Schema({
-    id: {
+export interface ICommunity {
+    id: string;
+    clerkId: string;
+    username: string;
+    name: string;
+    image: string;
+    bio: string;
+    createdBy: Types.ObjectId;
+    threads: Types.ObjectId[];
+    members: Types.ObjectId[];
+}
+
+const communitySchema = new mongoose.Schema<ICommunity>({
+    clerkId: {
         type: String,
         required: true,
     },
@@ -34,7 +46,6 @@ const communitySchema = new mongoose.Schema({
     ],
 });
 
-const Community =
-  mongoose.models.Community || mongoose.model('Community', communitySchema);
+const Community: Model<ICommunity> = mongoose.models.Community ||  mongoose.model('Community', communitySchema);
 
 export default Community;

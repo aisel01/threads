@@ -1,11 +1,11 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import User from '../models/user.model';
+import User, { IUser } from '../models/user.model';
 import { connectToDB } from '../mongoose';
 import { Error } from 'mongoose';
-import Thread from '../models/thread.model';
-import Community from '../models/community.model';
+import Thread, { IThread } from '../models/thread.model';
+import Community, { ICommunity } from '../models/community.model';
 
 type CreateThreadPayload = {
     text: string;
@@ -24,17 +24,20 @@ export async function getThreads(page = 1, pageSize = 20) {
             .sort({ createdAt: 'desc' })
             .skip(skipAmount)
             .limit(pageSize)
-            .populate({
+            .populate<{ community: ICommunity }>({
                 path: 'community',
                 model: Community,
             })
-            .populate({ path: 'author', model: User })
-            .populate({
+            .populate<{ author: IUser }>({
+                path: 'author',
+                model: User
+            })
+            .populate<{ children: Array<{ author: Pick<IUser, 'id' | 'name' | 'image'>}> }>({
                 path: 'children',
                 populate: {
                     path: 'author',
                     model: User,
-                    select: '_id name parentId image'
+                    select: 'id name image'
                 }
             });
 
@@ -58,24 +61,29 @@ export async function getThread(id: string) {
         await connectToDB();
 
         const thread = await Thread
-            .findOne({ _id: id })
-            .populate({
+            .findOne({ id })
+            .populate<{ community: Pick<ICommunity, 'id' | 'name' | 'image'> }>({
                 path: 'community',
                 model: Community,
                 select: '_id id name image',
             })
-            .populate({
+            .populate<{ author: Pick<IUser, 'id' | 'name' | 'image'> }>({
                 path: 'author',
                 model: User,
                 select: '_id id name image'
             })
-            .populate({
+            .populate<{
+                children: {
+                    author: Pick<IUser, 'id' | 'name' | 'image'>,
+                    children: IThread & { author: Pick<IUser, 'id' | 'name' | 'image'> }
+                }[]
+            }>({
                 path: 'children',
                 populate: [
                     {
                         path: 'author',
                         model: User,
-                        select: '_id id name parentId image'
+                        select: 'id name parentId image'
                     },
                     {
                         path: 'children',
@@ -83,7 +91,7 @@ export async function getThread(id: string) {
                         populate: {
                             path: 'author',
                             model: User,
-                            select: '_id id name image'
+                            select: 'id name image'
                         }
                     }
                 ]
@@ -132,12 +140,12 @@ export async function createThread({
     }
 }
 
-async function fetchAllChildThreads(threadId: string): Promise<any[]> {
+async function fetchAllChildThreads(threadId: string): Promise<IThread[]> {
     const childThreads = await Thread.find({ parentId: threadId });
 
     const descendantThreads = [];
     for (const childThread of childThreads) {
-        const descendants = await fetchAllChildThreads(childThread._id);
+        const descendants = await fetchAllChildThreads(childThread.id);
         descendantThreads.push(childThread, ...descendants);
     }
 
@@ -161,7 +169,7 @@ export async function deleteThread(id: string, path: string): Promise<void> {
         // Get all descendant thread IDs including the main thread ID and child thread IDs
         const descendantThreadIds = [
             id,
-            ...descendantThreads.map((thread) => thread._id),
+            ...descendantThreads.map((thread) => thread.id),
         ];
 
         // Extract the authorIds and communityIds to update User and Community models respectively
@@ -180,7 +188,7 @@ export async function deleteThread(id: string, path: string): Promise<void> {
         );
 
         // Recursively delete child threads and their descendants
-        await Thread.deleteMany({ _id: { $in: descendantThreadIds } });
+        await Thread.deleteMany({ id: { $in: descendantThreadIds } });
 
         // Update User model
         await User.updateMany(
@@ -195,8 +203,8 @@ export async function deleteThread(id: string, path: string): Promise<void> {
         );
 
         revalidatePath(path);
-    } catch (error: any) {
-        throw new Error(`Failed to delete thread: ${error.message}`);
+    } catch (e: any) {
+        throw new Error(`Failed to delete thread: ${e.message}`);
     }
 }
 

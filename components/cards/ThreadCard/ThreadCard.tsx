@@ -7,7 +7,6 @@ import ThreadCardMore from './ThreadCardMore';
 import ThreadCardActions from './ThreadCardActions';
 
 type Comment = {
-    id: string;
     author: {
         id: string;
         name: string;
@@ -29,7 +28,7 @@ type ThreadCardProps = {
         name: string;
         image: string;
     };
-    createdAt: string;
+    createdAt: Date;
     comments: Comment[];
     isComment?: boolean;
     canDelete?: boolean;

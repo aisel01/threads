@@ -1,14 +1,15 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import User from '../models/user.model';
+import User, { IUser } from '../models/user.model';
 import { connectToDB } from '../mongoose';
-import { Error, FilterQuery, SortOrder } from 'mongoose';
-import Thread from '../models/thread.model';
-import Community from '../models/community.model';
+import { Error, FilterQuery, SortOrder, Types } from 'mongoose';
+import Thread, { IThread } from '../models/thread.model';
+import Community, { ICommunity } from '../models/community.model';
 
 type UpdateUserPayload = {
-    userId: string;
+    id?: string;
+    clerkId: string;
     username: string;
     name: string;
     image: string;
@@ -17,7 +18,8 @@ type UpdateUserPayload = {
 };
 
 export async function updateUser({
-    userId,
+    id,
+    clerkId,
     username,
     name,
     image,
@@ -27,17 +29,30 @@ export async function updateUser({
     try {
         await connectToDB();
 
-        await User.findOneAndUpdate(
-            { id: userId },
-            {
-                username: username.toLowerCase(),
+        if (!id) {
+            const newUser = new User({
+                clerkId,
                 name,
                 image,
                 bio,
+                username: username.toLowerCase(),
                 onboarded: true,
-            },
-            { upsert: true }
-        );
+            });
+
+            await newUser.save();
+        } else {
+            await User.findOneAndUpdate(
+                { id },
+                {
+                    clerkId,
+                    name,
+                    image,
+                    bio,
+                    username: username.toLowerCase(),
+                    onboarded: true,
+                },
+            );
+        }
 
         if (path === '/profile/edit') {
             revalidatePath(path);
@@ -47,16 +62,17 @@ export async function updateUser({
     }
 }
 
-export async function getUser(userId: string) {
+export async function getUser(clerkId: string) {
     try {
         await connectToDB();
 
         return await User
-            .findOne({ id: userId })
-            .populate({
+            .findOne({ clerkId })
+            .populate<{ communities: ICommunity[] }>({
                 path: 'communities',
                 model: Community
             });
+
     } catch (e: any) {
         throw new Error(`Failed to get user: ${e.message}`);
     }
@@ -68,7 +84,12 @@ export async function getUserPosts(userId: string) {
 
         const threads = await User
             .findOne({ id: userId })
-            .populate({
+            .populate<{
+                threads: Array<IThread & {
+                    children: IThread & { author: Pick<IUser, 'id' | 'name' | 'image'> }
+                    community: Pick<ICommunity, 'id' | 'name' | 'image'>
+                }>,
+            }>({
                 path: 'threads',
                 model: Thread,
                 populate: [
@@ -78,13 +99,13 @@ export async function getUserPosts(userId: string) {
                         populate: {
                             path: 'author',
                             model: User,
-                            select: '_id name image'
+                            select: 'id name image'
                         },
                     },
                     {
                         path: 'community',
                         model: Community,
-                        select: 'name id image _id', // Select the "name" and "_id" fields from the "Community" model
+                        select: 'id name image'
                     },
                 ]
             });
@@ -161,18 +182,20 @@ export async function getActivity(userId: string) {
             author: userId
         });
 
-        const childThreadIds = userThreads.reduce((acc, userThread) => {
+        const childThreadIds = userThreads.reduce<Types.ObjectId[]>((acc, userThread) => {
             return acc.concat(userThread.children);
         }, []);
 
-        const replies = await Thread.find({
-            _id: { $in: childThreadIds },
-            author: { $ne: userId },
-        }).populate({
-            path: 'author',
-            model: User,
-            select: 'name image _id'
-        });
+        const replies = await Thread
+            .find({
+                _id: { $in: childThreadIds },
+                author: { $ne: userId },
+            })
+            .populate<{ author: Pick<IUser, 'name' | 'image' | 'id'> }>({
+                path: 'author',
+                model: User,
+                select: 'name image id'
+            });
 
         return replies;
     } catch (e: any) {

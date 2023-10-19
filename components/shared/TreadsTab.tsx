@@ -4,8 +4,8 @@ import ThreadCard from '../cards/ThreadCard/ThreadCard';
 import { fetchCommunityPosts } from '@/lib/actions/community.actions';
 
 type TreadsTabProps = {
-    accountId: string;
     authUserId: string;
+    accountId: string;
     accountType: 'User' | 'Community';
 }
 
