@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev | pino-pretty",
     "build": "next build",
     "start": "next start",
     "lint": "next lint && tsc --noEmit",
@@ -38,6 +38,9 @@
     "mongoose": "^7.4.3",
     "next": "^13.5.6",
     "next-themes": "^0.2.1",
+    "pino": "^8.16.0",
+    "pino-logflare": "^0.4.2",
+    "pino-pretty": "^10.2.3",
     "postcss": "8.4.28",
     "react": "18.2.0",
     "react-dom": "18.2.0",

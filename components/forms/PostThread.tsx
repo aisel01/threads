@@ -19,8 +19,6 @@ import * as z from 'zod';
 import { usePathname, useRouter } from 'next/navigation';
 import { useOrganization } from '@clerk/nextjs';
 
-
-
 function PostThread({ userId }: { userId: string }) {
     const router = useRouter();
     const pathname = usePathname();
@@ -34,8 +32,6 @@ function PostThread({ userId }: { userId: string }) {
             accountId: userId,
         }
     });
-
-    console.log({ organization });
 
     const handleSubmit = async (values: z.infer<typeof ThreadValidation>) => {
         await createThread({
