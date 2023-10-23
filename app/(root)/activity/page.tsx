@@ -14,7 +14,10 @@ const Page = async () => {
         redirect('/onboarding');
     }
 
-    const activity = await getActivity(userInfo.id);
+    const {
+        replies,
+        likes,
+    } = await getActivity(userInfo.id);
 
     return (
         <section>
@@ -22,15 +25,14 @@ const Page = async () => {
                 Activity
             </h1>
             <section className="mt-10 flex flex-col gap-5">
-                {activity.length > 0 ? (
+                {replies.length > 0 || likes.length > 0 ? (
                     <>
                         {
-                            activity.map(a => {
+                            replies.map(a => {
                                 return (
                                     <Link
                                         key={a.id}
                                         href={`/thread/${a.parentId}`}
-                                        className=""
                                     >
                                         <article className='activity-card'>
                                             <Image
@@ -50,6 +52,35 @@ const Page = async () => {
                                         </article>
                                     </Link>
                                 );
+                            })
+                        }
+                        {
+                            likes.map(thread => {
+                                return thread.likes.map(like => {
+                                    return (
+                                        <Link
+                                            key={like.id}
+                                            href={`/thread/${thread.id}`}
+                                        >
+                                            <article className='activity-card'>
+                                                <Image
+                                                    alt="Profile image"
+                                                    src={like.image}
+                                                    width={20}
+                                                    height={20}
+                                                    className="rounded-full object-cover"
+                                                    style={{ height: 20 }}
+                                                />
+                                                <p className='!text-small-regular text-light-1'>
+                                                    <span className='mr-1 text-primary-500'>
+                                                        {like.name}
+                                                    </span>{' '}
+                                                    liked your thread
+                                                </p>
+                                            </article>
+                                        </Link>
+                                    );
+                                });
                             })
                         }
                     </>

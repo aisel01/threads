@@ -12,6 +12,7 @@ type TreadsTabProps = {
 async function TreadsTab(props: TreadsTabProps) {
     const {
         accountId,
+        authUserId,
         accountType,
     } = props;
 
@@ -34,6 +35,7 @@ async function TreadsTab(props: TreadsTabProps) {
                     <ThreadCard
                         key={thread.id}
                         id={thread.id}
+                        currentUserId={authUserId}
                         content={thread.text}
                         author={
                             accountType === 'User'
@@ -51,6 +53,7 @@ async function TreadsTab(props: TreadsTabProps) {
                         }
                         createdAt={thread.createdAt}
                         comments={thread.children}
+                        likes={thread.likes}
                     />
                 );
             })}

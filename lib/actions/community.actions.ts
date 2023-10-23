@@ -93,6 +93,7 @@ export async function fetchCommunityPosts(id: string) {
                 threads: Array<IThread & {
                     author: Pick<IUser, 'id' | 'name' | 'image'>
                     children: IThread & { author: Pick<IUser, 'id' | 'name' | 'image'> }
+                    likes: Array<Pick<IUser, 'id' | 'name' | 'username' | 'image'>>
                 }>,
             }>({
                 path: 'threads',
@@ -112,6 +113,11 @@ export async function fetchCommunityPosts(id: string) {
                             select: 'name image id',
                         },
                     },
+                    {
+                        path: 'likes',
+                        model: User,
+                        select: 'name username image id',
+                    }
                 ],
             });
 

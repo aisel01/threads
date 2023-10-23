@@ -30,10 +30,12 @@ async function Page({ params }: { params: { id: string } }) {
             <div>
                 <ThreadCard
                     id={thread.id}
+                    currentUserId={userInfo.id}
                     content={thread.text}
                     author={thread.author}
                     createdAt={thread.createdAt}
                     comments={thread.children}
+                    likes={thread.likes}
                     community={thread.community}
                     canDelete={thread.author.id === userInfo.id}
                 />
@@ -50,10 +52,12 @@ async function Page({ params }: { params: { id: string } }) {
                     <ThreadCard
                         key={comment.id}
                         id={comment.id}
+                        currentUserId={userInfo.id}
                         content={comment.text}
                         author={comment.author}
                         createdAt={comment.createdAt}
                         comments={comment.children}
+                        likes={comment.likes}
                         community={comment.community}
                         isComment
                         canDelete={comment.author.id === userInfo.id}

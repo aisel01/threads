@@ -26,6 +26,11 @@ export async function getThreads(page = 1, pageSize = 20) {
                 path: 'author',
                 model: User
             })
+            .populate<{ likes: Array<Pick<IUser, 'name' | 'username' | 'image' | 'id'>>}>({
+                path: 'likes',
+                model: User,
+                select: 'name username image id',
+            })
             .populate<{ children: Array<{ author: Pick<IUser, 'id' | 'name' | 'image'>}> }>({
                 path: 'children',
                 populate: {
@@ -66,6 +71,11 @@ export async function getThread(id: string) {
                 model: User,
                 select: '_id id name image'
             })
+            .populate<{ likes: Array<Pick<IUser, 'name' | 'username' | 'image' | 'id'>>}>({
+                path: 'likes',
+                model: User,
+                select: 'name username image id',
+            })
             .populate<{
                 children: {
                     author: Pick<IUser, 'id' | 'name' | 'image'>,
@@ -78,6 +88,11 @@ export async function getThread(id: string) {
                         path: 'author',
                         model: User,
                         select: 'id name parentId image'
+                    },
+                    {
+                        path: 'likes',
+                        model: User,
+                        select: 'name username image id',
                     },
                     {
                         path: 'children',
@@ -221,7 +236,6 @@ export async function addCommentToThread({
     text: string;
     userId: string;
     path: string;
-
 }) {
     await connectToDB();
 
@@ -243,6 +257,79 @@ export async function addCommentToThread({
         parentThread.children.push(savedCommentThread._id);
 
         await parentThread.save();
+
+        revalidatePath(path);
+    } catch (e: any) {
+        throw new Error(`Error getting thread: ${e.message}`);
+    }
+}
+
+export async function likeThread({
+    threadId,
+    userId,
+    path,
+}: {
+    threadId: string;
+    userId: string;
+    path: string;
+}) {
+
+    try {
+        await connectToDB();
+
+        logger.debug({
+            threadId,
+            userId,
+        }, 'Like thread');
+
+        const thread = await Thread.findById(threadId);
+
+        if (!thread) {
+            throw new Error(`Thread with id ${threadId} not found`);
+        }
+
+        const user = await User.findById(userId, { _id: 1 });
+        if (!user) {
+            throw new Error(`User with id ${userId} not found`);
+        }
+
+        thread.likes.push(user._id);
+
+        await thread.save();
+
+        revalidatePath(path);
+    } catch (e: any) {
+        throw new Error(`Error getting thread: ${e.message}`);
+    }
+}
+
+export async function unlikeThread({
+    threadId,
+    userId,
+    path,
+}: {
+    threadId: string;
+    userId: string;
+    path: string;
+}) {
+
+    try {
+        await connectToDB();
+
+        logger.debug({
+            threadId,
+            userId,
+        }, 'Unlike thread');
+
+        const user = await User.findById(userId, { _id: 1 });
+        if (!user) {
+            throw new Error(`User with id ${userId} not found`);
+        }
+
+        await Thread.findByIdAndUpdate(
+            threadId,
+            { $pull: { likes: user._id } }
+        );
 
         revalidatePath(path);
     } catch (e: any) {

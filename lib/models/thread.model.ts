@@ -9,6 +9,7 @@ export interface IThread {
     createdAt: Date;
     parentId: string;
     children: Types.ObjectId[];
+    likes: Types.ObjectId[];
 }
 
 const threadSchema = new mongoose.Schema<IThread>({
@@ -33,6 +34,12 @@ const threadSchema = new mongoose.Schema<IThread>({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Thread',
+        }
+    ],
+    likes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
         }
     ]
 });

@@ -24,7 +24,6 @@ function ThreadCardMore(props: ThreadCardMoreProps) {
     const pathname = usePathname();
     const router = useRouter();
 
-
     const handleDelete = () => {
         startDeleteTransition(async() => {
             await deleteThread(

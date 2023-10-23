@@ -1,52 +1,109 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useTransition } from 'react';
+import { likeThread, unlikeThread } from '@/lib/actions/thread.actions';
+import { usePathname } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 type ThreadCardActionsProps = {
     id: string;
+    currentUserId: string;
     isComment: boolean;
+    liked?: boolean;
 }
 
 function ThreadCardActions(props: ThreadCardActionsProps) {
     const {
         id,
         isComment,
+        liked,
+        currentUserId,
     } = props;
+
+    const pathname = usePathname();
+
+    const [isLikePending, startLikeTransition] = useTransition();
+
+    const handleLike = () => {
+        startLikeTransition(async() => {
+            if (!liked) {
+                await likeThread({
+                    threadId: id,
+                    userId: currentUserId,
+                    path: pathname
+                });
+            } else {
+                await unlikeThread({
+                    threadId: id,
+                    userId: currentUserId,
+                    path: pathname
+                });
+            }
+        });
+    };
 
     return (
         <div className={`${isComment && 'mb-10'} mt-5 flex flex-col gap-3`}>
-            <div className="flex gap-3.5">
-                <Image
-                    src="/assets/heart-gray.svg"
-                    alt="heart"
-                    width={24}
-                    height={24}
-                    className="cursor-pointer object-contain"
-                />
-                <Link
-                    href={`/thread/${id}`}
+            <div className="flex">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={isLikePending}
+                    onClick={handleLike}
                 >
                     <Image
-                        src="/assets/reply.svg"
-                        alt="reply"
+                        src={liked ? '/assets/heart-filled.svg' : '/assets/heart-gray.svg'}
+                        alt="heart"
                         width={24}
                         height={24}
-                        className="cursor-pointer object-contain"
+                        className="object-contain"
                     />
-                </Link>
-                <Image
-                    src="/assets/repost.svg"
-                    alt="repost"
-                    width={24}
-                    height={24}
-                    className="cursor-pointer object-contain"
-                />
-                <Image
-                    src="/assets/share.svg"
-                    alt="share"
-                    width={24}
-                    height={24}
-                    className="cursor-pointer object-contain"
-                />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                >
+                    <Link
+                        href={`/thread/${id}`}
+                    >
+                        <Image
+                            src="/assets/reply.svg"
+                            alt="reply"
+                            width={24}
+                            height={24}
+                            className="object-contain"
+                        />
+                    </Link>
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled
+                >
+                    <Image
+                        src="/assets/repost.svg"
+                        alt="repost"
+                        width={24}
+                        height={24}
+                        className="object-contain"
+                    />
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled
+                >
+                    <Image
+                        src="/assets/share.svg"
+                        alt="share"
+                        width={24}
+                        height={24}
+                        className="object-contain"
+                    />
+                </Button>
+
             </div>
         </div>
     );

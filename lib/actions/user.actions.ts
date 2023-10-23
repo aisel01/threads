@@ -129,6 +129,7 @@ export async function getUserPosts(userId: string) {
                 threads: Array<IThread & {
                     children: IThread & { author: Pick<IUser, 'id' | 'name' | 'image'> }
                     community: Pick<ICommunity, 'id' | 'name' | 'image'>
+                    likes: Array<Pick<IUser, 'id' | 'name' | 'username' | 'image'>>
                 }>,
             }>({
                 path: 'threads',
@@ -148,6 +149,11 @@ export async function getUserPosts(userId: string) {
                         model: Community,
                         select: 'id name image'
                     },
+                    {
+                        path: 'likes',
+                        model: User,
+                        select: 'name username image id',
+                    }
                 ]
             });
 
@@ -215,7 +221,8 @@ export async function getUsers({
     }
 }
 
-export async function getActivity(userId: string) {
+export async function getReplies(userId: string) {
+    // TODO: pagination
     try {
         await connectToDB();
 
@@ -239,6 +246,46 @@ export async function getActivity(userId: string) {
             });
 
         return replies;
+    } catch (e: any) {
+        throw new Error(`Failed to get replies: ${e.message}`);
+    }
+}
+
+export async function getLikes(userId: string) {
+    // TODO: pagination
+    try {
+        await connectToDB();
+
+        // TODO: remove own likes, make array flat
+        const likes = await Thread
+            .find({
+                author: userId
+            })
+            .populate<{ likes: Array<Pick<IUser, 'name' | 'image' | 'id'>> }>({
+                path: 'likes',
+                model: User,
+                select: 'id name image'
+            });
+
+        logger.debug({likes}, 'LIKES');
+        return likes;
+    } catch (e: any) {
+        throw new Error(`Failed to get activity: ${e.message}`);
+    }
+}
+
+export async function getActivity(userId: string) {
+    try {
+        const [
+            replies,
+            likes,
+        ] = await Promise.all([
+            getReplies(userId),
+            getLikes(userId)
+        ]);
+
+        // TODO: sort by date
+        return { replies, likes };
     } catch (e: any) {
         throw new Error(`Failed to get activity: ${e.message}`);
     }

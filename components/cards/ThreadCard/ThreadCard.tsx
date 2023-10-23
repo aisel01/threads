@@ -16,6 +16,7 @@ type Comment = {
 
 type ThreadCardProps = {
     id: string;
+    currentUserId: string;
     content: string;
     parentId?: string;
     author: {
@@ -30,6 +31,11 @@ type ThreadCardProps = {
     };
     createdAt: Date;
     comments: Comment[];
+    likes: {
+        id: string;
+        name: string;
+        image: string;
+    }[];
     isComment?: boolean;
     canDelete?: boolean;
 }
@@ -37,16 +43,20 @@ type ThreadCardProps = {
 function ThreadCard(props: ThreadCardProps) {
     const {
         id,
+        currentUserId,
         content,
         author,
         isComment = false,
         comments,
+        likes,
         community,
         createdAt,
         canDelete = false,
     } = props;
 
     const showReplies = !isComment && comments.length > 0;
+
+    const isLiked = likes.some(like => like.id === currentUserId);
 
     return (
         <article className={`flex w-full justify-between rounded-xl ${isComment ? 'px-0 xs:px-7' : 'bg-dark-2 p-7' }`}>
@@ -75,7 +85,9 @@ function ThreadCard(props: ThreadCardProps) {
                         </p>
                         <ThreadCardActions
                             id={id}
+                            currentUserId={currentUserId}
                             isComment={isComment}
+                            liked={isLiked}
                         />
                     </div>
                 </div>
@@ -88,12 +100,15 @@ function ThreadCard(props: ThreadCardProps) {
                             />
                         </div>
                         <Link
-                            href={`/tread/${id}`}
+                            href={`/thread/${id}`}
                         >
                             <p className="text-small-regular text-gray-1">
                                 {comments.length} replies
                             </p>
                         </Link>
+                        <p className="text-small-regular text-gray-1">
+                            {likes.length} likes
+                        </p>
                     </div>
                 )}
                 {!isComment && community && (

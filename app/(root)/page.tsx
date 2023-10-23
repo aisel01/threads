@@ -27,10 +27,12 @@ async function Page() {
                             <ThreadCard
                                 key={thread.id}
                                 id={thread.id}
+                                currentUserId={userInfo.id}
                                 content={thread.text}
                                 author={thread.author}
                                 createdAt={thread.createdAt}
                                 comments={thread.children}
+                                likes={thread.likes}
                                 community={thread.community}
                                 canDelete={thread.author.id === userInfo.id}
                             />
