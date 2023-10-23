@@ -1,5 +1,6 @@
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
 import { currentUser } from '@clerk/nextjs';
+import { logger } from '@/logger';
 const f = createUploadthing();
 
 const getUser = async () => await currentUser();
@@ -21,9 +22,9 @@ export const ourFileRouter = {
         })
         .onUploadComplete(async ({ metadata, file }) => {
             // This code RUNS ON YOUR SERVER after upload
-            console.log('Upload complete for userId:', metadata.userId);
+            logger.info(`Upload complete for userId: ${metadata.userId}`);
 
-            console.log('file url', file.url);
+            logger.debug(`file url: ${file.url}`);
         }),
 } satisfies FileRouter;
 

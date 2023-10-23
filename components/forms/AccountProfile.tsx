@@ -1,6 +1,11 @@
 'use client';
 
 import { ChangeEvent, useState } from 'react';
+import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import {
     Form,
     FormControl,
@@ -11,17 +16,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { userValidation } from '@/lib/validations/user';
-import Image from 'next/image';
-import * as z from 'zod';
 import { isBase64Image } from '@/lib/utils';
 import { useUploadThing } from '@/lib/uploadthing';
-import { updateUser } from '@/lib/actions/user.actions';
-import { usePathname, useRouter } from 'next/navigation';
-
+import { createUser, updateUser } from '@/lib/actions/user.actions';
+import { useUser } from '@clerk/nextjs';
+import { logger } from '@/logger';
 
 type AccountProfileProps = {
     user: {
@@ -38,8 +38,10 @@ type AccountProfileProps = {
 const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
     const pathname = usePathname();
     const router = useRouter();
+    const { user: clerkUser } = useUser();
 
     const [files, setFiles] = useState<File[]>([]);
+    const [loading, setLoading] = useState(false);
 
     const { startUpload } = useUploadThing('media');
 
@@ -54,27 +56,48 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
     });
 
     const handleSubmit = async (values: z.infer<typeof userValidation>) => {
-        const blob = values.profile_photo;
+        setLoading(true);
 
-        const hasImageChanged = isBase64Image(blob);
+        try {
+            const blob = values.profile_photo;
 
-        if (hasImageChanged) {
-            const imgRes = await startUpload(files);
+            const hasImageChanged = isBase64Image(blob);
 
-            if (imgRes && imgRes[0].url) {
-                values.profile_photo = imgRes[0].url;
+            if (hasImageChanged) {
+                const imgRes = await startUpload(files);
+
+                if (imgRes && imgRes[0].url) {
+                    values.profile_photo = imgRes[0].url;
+                }
+
+                await clerkUser?.setProfileImage({
+                    file: blob,
+                });
             }
-        }
 
-        await updateUser({
-            id: user.id,
-            clerkId: user.clerkId,
-            username: values.username,
-            name: values.name,
-            image: values.profile_photo,
-            bio: values.bio,
-            path: pathname,
-        });
+            if (user.id) {
+                await updateUser({
+                    id: user.id,
+                    username: values.username,
+                    name: values.name,
+                    image: values.profile_photo,
+                    bio: values.bio,
+                    path: pathname,
+                });
+            } else {
+                await createUser({
+                    clerkId: user.clerkId,
+                    username: values.username,
+                    name: values.name,
+                    image: values.profile_photo,
+                    bio: values.bio,
+                });
+            }
+        } catch {
+            logger.error('Failed to save profile');
+        } finally {
+            setLoading(false);
+        }
 
         if (pathname === '/profile/edit') {
             router.back();
@@ -120,15 +143,14 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                         name="profile_photo"
                         render={({ field }) => (
                             <FormItem className="flex items-center gap-4">
-                                <FormLabel className="account-form_image-label">
+                                <FormLabel className="account-form_image-label relative">
                                     {field.value ? (
                                         <Image
                                             src={field.value}
                                             alt="profile photo"
-                                            width={96}
-                                            height={96}
+                                            fill
                                             priority
-                                            className="rounded-full object-contain"
+                                            className="rounded-full object-cover"
                                         />
                                     ): (
                                         <Image
@@ -198,7 +220,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                                 </FormLabel>
                                 <FormControl>
                                     <Textarea
-                                        rows={10}
+                                        rows={4}
                                         className="account-form_input no-focus"
                                         {...field}
                                     />
@@ -209,6 +231,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                     <Button
                         type="submit"
                         className="bg-primary-500"
+                        disabled={loading}
                     >
                         {btnTitle}
                     </Button>

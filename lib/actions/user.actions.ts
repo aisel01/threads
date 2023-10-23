@@ -6,10 +6,45 @@ import { connectToDB } from '../mongoose';
 import { Error, FilterQuery, SortOrder, Types } from 'mongoose';
 import Thread, { IThread } from '../models/thread.model';
 import Community, { ICommunity } from '../models/community.model';
+import { logger } from '@/logger';
+
+type CreateUserPayload = {
+    clerkId: string;
+    username: string;
+    name: string;
+    image: string;
+    bio: string;
+};
+
+export async function createUser({
+    clerkId,
+    username,
+    name,
+    image,
+    bio,
+}: CreateUserPayload): Promise<void> {
+    try {
+        await connectToDB();
+
+        logger.debug(`Creating new User ${clerkId}`);
+
+        const newUser = new User({
+            clerkId,
+            name,
+            image,
+            bio,
+            username: username.toLowerCase(),
+            onboarded: true,
+        });
+
+        await newUser.save();
+    } catch (e: any) {
+        logger.error(e, `Failed to create user ${clerkId}: ${e.message}`);
+    }
+}
 
 type UpdateUserPayload = {
-    id?: string;
-    clerkId: string;
+    id: string;
     username: string;
     name: string;
     image: string;
@@ -19,7 +54,6 @@ type UpdateUserPayload = {
 
 export async function updateUser({
     id,
-    clerkId,
     username,
     name,
     image,
@@ -29,36 +63,21 @@ export async function updateUser({
     try {
         await connectToDB();
 
-        if (!id) {
-            const newUser = new User({
-                clerkId,
-                name,
-                image,
-                bio,
-                username: username.toLowerCase(),
-                onboarded: true,
-            });
+        logger.debug(`Updating existing User with id: ${id}`);
 
-            await newUser.save();
-        } else {
-            await User.findOneAndUpdate(
-                { id },
-                {
-                    clerkId,
-                    name,
-                    image,
-                    bio,
-                    username: username.toLowerCase(),
-                    onboarded: true,
-                },
-            );
-        }
+        await User.findByIdAndUpdate(id, {
+            name,
+            image,
+            bio,
+            username: username.toLowerCase(),
+            onboarded: true,
+        });
 
         if (path === '/profile/edit') {
             revalidatePath(path);
         }
     } catch (e: any) {
-        throw new Error(`Failed to create/update user: ${e.message}`);
+        logger.error(e, `Failed to update user ${id}: ${e.message}`);
     }
 }
 

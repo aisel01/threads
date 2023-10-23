@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 type ProfileHeaderProps = {
     authUserId: string;
@@ -12,15 +13,19 @@ type ProfileHeaderProps = {
 
 function ProfileHeader(props: ProfileHeaderProps) {
     const {
+        authUserId,
+        accountId,
         name,
         username,
         imgUrl,
         bio,
     } = props;
 
+    const canEdit = authUserId === accountId;
+
     return (
         <div className="flex w-full flex-col justify-start">
-            <div className="flex items-center justify-between">
+            <div className="flex justify-between items-stretch">
                 <div className="flex items-center gap-3">
                     <div className="relative w-20 h-20">
                         <Image
@@ -39,6 +44,19 @@ function ProfileHeader(props: ProfileHeaderProps) {
                         </p>
                     </div>
                 </div>
+                {canEdit && (
+                    <Link
+                        href={'/profile/edit'}
+                    >
+                        <Image
+                            src="/assets/edit.svg"
+                            alt="edit"
+                            width={24}
+                            height={24}
+                            className="cursor-pointer object-contain"
+                        />
+                    </Link>
+                )}
             </div>
             <p className="mt-6 max-w-lg text-base-regular text-light-2">
                 {bio}
