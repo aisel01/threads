@@ -19,7 +19,7 @@ async function Page() {
     return (
         <section className='flex flex-col gap-10'>
             {threads.length === 0 ? (
-                <p className='no-result'>No threads found</p>
+                <p className='no-result'>No threads yet</p>
             ) : (
                 <>
                     {threads.map(thread => {
