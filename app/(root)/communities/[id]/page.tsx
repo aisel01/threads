@@ -28,7 +28,7 @@ async function Page({ params }: { params: { id: string } }) {
     return (
         <section className="relative">
             <ProfileHeader
-                accountId={userInfo.id}
+                accountId={communityDetails.id}
                 authUserId={userInfo.id}
                 name={communityDetails.name}
                 username={communityDetails.username}

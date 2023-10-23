@@ -1,28 +1,25 @@
 import AccountProfile from '@/components/forms/AccountProfile';
-import { getUser } from '@/lib/actions/user.actions';
-import { currentUser } from '@clerk/nextjs';
+import { getCurrentUser } from '@/lib/actions/user.actions';
 import { redirect } from 'next/navigation';
 
 async function Page() {
-    const user = await currentUser();
+    const userInfo = await getCurrentUser();
 
-    if (!user) {
+    if (!userInfo) {
         return null;
     }
-
-    const userInfo = await getUser(user.id);
 
     if (userInfo?.onboarded) {
         redirect('/');
     }
 
     const userData = {
-        clerkId: user?.id || '',
+        clerkId: userInfo?.clerkId,
         id: userInfo?.id,
-        username: userInfo?.username || user?.username || '',
-        name: userInfo?.name || user?.firstName || '',
+        username: userInfo?.username || '',
+        name: userInfo?.name || '',
         bio: userInfo?.bio || '',
-        image: userInfo?.image || user?.imageUrl,
+        image: userInfo?.image,
     };
 
     return (
@@ -34,7 +31,7 @@ async function Page() {
             <section className="mt-9 bg-dark-2 p-10">
                 <AccountProfile
                     user={userData}
-                    btnTitle="Submit"
+                    btnTitle="Continue"
                 />
             </section>
         </main>
