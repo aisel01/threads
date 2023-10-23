@@ -103,8 +103,10 @@ export async function getUser(id: string) {
     try {
         await connectToDB();
 
+        logger.debug(`Getting user ${id}`);
+
         return await User
-            .findOne({ id })
+            .findById(id)
             .populate<{ communities: ICommunity[] }>({
                 path: 'communities',
                 model: Community
@@ -119,8 +121,10 @@ export async function getUserPosts(userId: string) {
     try {
         await connectToDB();
 
+        logger.debug(`Getting user ${userId} threads`);
+
         const threads = await User
-            .findOne({ id: userId })
+            .findById(userId)
             .populate<{
                 threads: Array<IThread & {
                     children: IThread & { author: Pick<IUser, 'id' | 'name' | 'image'> }
