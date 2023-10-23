@@ -1,19 +1,15 @@
 import PostThread from '@/components/forms/PostThread';
-import { getUser } from '@/lib/actions/user.actions';
-import { currentUser } from '@clerk/nextjs';
+import { getCurrentUser } from '@/lib/actions/user.actions';
 import { redirect } from 'next/navigation';
 
-
 async function Page() {
-    const user = await currentUser();
+    const userInfo = await getCurrentUser();
 
-    if (!user) {
+    if (!userInfo) {
         return null;
     }
 
-    const userInfo = await getUser(user.id);
-
-    if (!userInfo?.onboarded) {
+    if (!userInfo.onboarded) {
         redirect('/onboarding');
     }
 

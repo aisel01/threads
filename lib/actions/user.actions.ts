@@ -7,6 +7,7 @@ import { Error, FilterQuery, SortOrder, Types } from 'mongoose';
 import Thread, { IThread } from '../models/thread.model';
 import Community, { ICommunity } from '../models/community.model';
 import { logger } from '@/logger';
+import { currentUser } from '@clerk/nextjs';
 
 type CreateUserPayload = {
     clerkId: string;
@@ -81,12 +82,29 @@ export async function updateUser({
     }
 }
 
-export async function getUser(clerkId: string) {
+export async function getCurrentUser() {
+    try {
+        const user = await currentUser();
+
+        await connectToDB();
+
+        return await User
+            .findOne({ clerkId: user?.id })
+            .populate<{ communities: ICommunity[] }>({
+                path: 'communities',
+                model: Community
+            });
+    } catch (e: any) {
+        throw new Error(`Failed to get current user: ${e.message}`);
+    }
+}
+
+export async function getUser(id: string) {
     try {
         await connectToDB();
 
         return await User
-            .findOne({ clerkId })
+            .findOne({ id })
             .populate<{ communities: ICommunity[] }>({
                 path: 'communities',
                 model: Community

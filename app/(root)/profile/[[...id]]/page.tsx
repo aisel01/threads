@@ -2,19 +2,13 @@ import ProfileHeader from '@/components/shared/ProfileHeader';
 import TreadsTab from '@/components/shared/TreadsTab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { profileTabs } from '@/constants';
-import { getUser } from '@/lib/actions/user.actions';
-import { currentUser } from '@clerk/nextjs';
+import { getCurrentUser, getUser } from '@/lib/actions/user.actions';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
-async function Page({ params }: { params: { id?: string } }) {
-    const user = await currentUser();
-
-    if (!user) {
-        return null;
-    }
-
-    const authUserInfo = await getUser(user.id);
+async function Page({ params }: { params: { id?: string[] } }) {
+    const [id] = params.id || [];
+    const authUserInfo = await getCurrentUser();
 
     if (!authUserInfo?.onboarded) {
         redirect('/onboarding');
@@ -22,8 +16,8 @@ async function Page({ params }: { params: { id?: string } }) {
 
     let userInfo: typeof authUserInfo | null = authUserInfo;
 
-    if (params.id) {
-        userInfo = await getUser(params.id);
+    if (id) {
+        userInfo = await getUser(id);
     }
 
     if (!userInfo) {

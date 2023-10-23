@@ -1,19 +1,16 @@
-import { getActivity, getUser } from '@/lib/actions/user.actions';
-import { currentUser } from '@clerk/nextjs';
+import { getActivity, getCurrentUser } from '@/lib/actions/user.actions';
 import Link from 'next/link';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
 const Page = async () => {
-    const user = await currentUser();
+    const userInfo = await getCurrentUser();
 
-    if (!user) {
+    if (!userInfo) {
         return null;
     }
 
-    const userInfo = await getUser(user.id);
-
-    if (!userInfo?.onboarded) {
+    if (!userInfo.onboarded) {
         redirect('/onboarding');
     }
 
@@ -57,7 +54,7 @@ const Page = async () => {
                         }
                     </>
                 ) : (
-                    <p className="no-result">No activity</p>
+                    <p className="no-result">No activity yet</p>
                 )}
             </section>
         </section>

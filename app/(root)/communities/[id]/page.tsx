@@ -4,21 +4,18 @@ import TreadsTab from '@/components/shared/TreadsTab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { communityTabs } from '@/constants';
 import { fetchCommunityDetails } from '@/lib/actions/community.actions';
-import { getUser } from '@/lib/actions/user.actions';
-import { currentUser } from '@clerk/nextjs';
+import { getCurrentUser } from '@/lib/actions/user.actions';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
 async function Page({ params }: { params: { id: string } }) {
-    const user = await currentUser();
+    const userInfo = await getCurrentUser();
 
-    if (!user) {
+    if (!userInfo) {
         return null;
     }
 
-    const userInfo = await getUser(user.id);
-
-    if (!userInfo?.onboarded) {
+    if (!userInfo.onboarded) {
         redirect('/onboarding');
     }
 
