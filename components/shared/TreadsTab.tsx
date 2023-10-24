@@ -54,6 +54,7 @@ async function TreadsTab(props: TreadsTabProps) {
                         createdAt={thread.createdAt}
                         comments={thread.children}
                         likes={thread.likes}
+                        showReplyPics={thread.children.length > 0}
                     />
                 );
             })}

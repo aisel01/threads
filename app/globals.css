@@ -108,7 +108,7 @@
 
   /* thread card  */
   .thread-card_bar {
-    @apply relative mt-2 w-0.5 grow rounded-full;
+    @apply relative mt-2 w-0.5 grow rounded-full bg-secondary;
   }
 
   /* User card */

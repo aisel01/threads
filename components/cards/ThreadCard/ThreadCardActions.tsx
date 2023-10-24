@@ -45,8 +45,8 @@ function ThreadCardActions(props: ThreadCardActionsProps) {
     };
 
     return (
-        <div className={`${isComment && 'mb-10'} mt-5 flex flex-col gap-3`}>
-            <div className="flex">
+        <div className={`${isComment && 'mb-10'} mt-3 flex flex-col gap-3`}>
+            <div className="flex -ml-2">
                 <Button
                     variant="ghost"
                     size="icon"

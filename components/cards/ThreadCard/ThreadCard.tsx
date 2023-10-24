@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { cn, formatDateString } from '@/lib/utils';
+import { cn, formatDateDistance, formatDateString } from '@/lib/utils';
 import UserList from '../../shared/UserList';
 import UserPic from '../../shared/UserPic';
 import ThreadCardMore from './ThreadCardMore';
 import ThreadCardActions from './ThreadCardActions';
+import ThreadCardLikes from './ThreadCardLikes';
 
 type Comment = {
     author: {
@@ -34,10 +35,12 @@ type ThreadCardProps = {
     likes: {
         id: string;
         name: string;
+        username: string;
         image: string;
     }[];
     isComment?: boolean;
     canDelete?: boolean;
+    showReplyPics?: boolean;
 }
 
 function ThreadCard(props: ThreadCardProps) {
@@ -52,9 +55,8 @@ function ThreadCard(props: ThreadCardProps) {
         community,
         createdAt,
         canDelete = false,
+        showReplyPics = false,
     } = props;
-
-    const showReplies = !isComment && comments.length > 0;
 
     const isLiked = likes.some(like => like.id === currentUserId);
 
@@ -72,7 +74,7 @@ function ThreadCard(props: ThreadCardProps) {
                             image={author.image}
                             size={44}
                         />
-                        {showReplies && <div className="thread-card_bar" />}
+                        {showReplyPics && <div className="thread-card_bar" />}
                     </div>
                     <div className="flex w-full flex-col">
                         <Link
@@ -83,7 +85,7 @@ function ThreadCard(props: ThreadCardProps) {
                                 {author.name}
                             </h4>
                         </Link>
-                        <p className="mt-2 text-small-regular">
+                        <p className="mt-1 text-small-regular">
                             {content}
                         </p>
                         <ThreadCardActions
@@ -94,33 +96,34 @@ function ThreadCard(props: ThreadCardProps) {
                         />
                     </div>
                 </div>
-                {showReplies && (
-                    <div className="mt-2 flex gap-4">
-                        <div className='w-11 flex justify-center'>
+                <div className="mt-2 flex gap-4">
+                    <div className='w-11 flex justify-center'>
+                        {showReplyPics && (
                             <UserList
                                 size={18}
                                 users={comments.map(comment => comment.author)}
                             />
-                        </div>
+                        )}
+                    </div>
+                    {comments.length > 0 && (
                         <Link
                             href={`/thread/${id}`}
+                            className="text-small-regular text-muted-foreground hover:underline"
                         >
-                            <p className="text-small-regular">
-                                {comments.length} replies
-                            </p>
+                            {comments.length} replies
                         </Link>
-                        <p className="text-small-regular">
-                            {likes.length} likes
-                        </p>
-                    </div>
-                )}
+                    )}
+                    {likes.length > 0 && (
+                        <ThreadCardLikes likes={likes} />
+                    )}
+                </div>
                 {!isComment && community && (
                     <Link
                         href={`/communities/${community.id}`}
                         className="mt-5 flex items-center"
                     >
                         <p className="text-subtle-medium">
-                            {formatDateString(createdAt)} - {community.name} Community
+                            {community.name} Community
                         </p>
                         <Image
                             src={community.image}
@@ -132,12 +135,16 @@ function ThreadCard(props: ThreadCardProps) {
                     </Link>
                 )}
             </div>
-            {canDelete && (
+            <div className="flex gap-2 align-baseline self-start">
+                <span className="text-small-regular text-muted-foreground" title={formatDateString(createdAt)}>
+                    {formatDateDistance(createdAt)}
+                </span>
                 <ThreadCardMore
+                    className={cn(!canDelete && 'invisible')}
                     id={id}
                     isComment={isComment}
                 />
-            )}
+            </div>
         </article>
     );
 }

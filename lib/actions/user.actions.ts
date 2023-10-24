@@ -261,10 +261,10 @@ export async function getLikes(userId: string) {
             .find({
                 author: userId
             })
-            .populate<{ likes: Array<Pick<IUser, 'name' | 'image' | 'id'>> }>({
+            .populate<{ likes: Array<Pick<IUser, 'name' | 'username' | 'image' | 'id'>> }>({
                 path: 'likes',
                 model: User,
-                select: 'id name image'
+                select: 'id name username image'
             });
 
         logger.debug({likes}, 'LIKES');

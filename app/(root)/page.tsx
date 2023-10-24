@@ -35,6 +35,7 @@ async function Page() {
                                 likes={thread.likes}
                                 community={thread.community}
                                 canDelete={thread.author.id === userInfo.id}
+                                showReplyPics={thread.children.length > 0}
                             />
                         );
                     })}
