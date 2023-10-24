@@ -55,6 +55,7 @@ async function TreadsTab(props: TreadsTabProps) {
                         comments={thread.children}
                         likes={thread.likes}
                         showReplyPics={thread.children.length > 0}
+                        canDelete={authUserId === (accountType === 'Community' ? thread.author.id : result.id)}
                     />
                 );
             })}

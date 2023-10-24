@@ -1,5 +1,6 @@
 import ThreadCard from '@/components/cards/ThreadCard/ThreadCard';
 import Comment from '@/components/forms/Comment';
+import { Separator } from '@/components/ui/separator';
 import { getThread } from '@/lib/actions/thread.actions';
 import { getCurrentUser } from '@/lib/actions/user.actions';
 import { redirect } from 'next/navigation';
@@ -38,30 +39,38 @@ async function Page({ params }: { params: { id: string } }) {
                     likes={thread.likes}
                     community={thread.community}
                     canDelete={thread.author.id === userInfo.id}
+                    rounded={false}
                 />
+                <Separator />
             </div>
-            <div className="mt-7">
+            <div className="py-4 px-7">
                 <Comment
                     threadId={thread.id}
                     currentUserId={userInfo.id}
                     currentUserImg={userInfo.image}
+                    parentThreadAuthor={thread.author.username}
                 />
             </div>
-            <div className="mt-10 flex flex-col gap-3">
+            <div className="flex flex-col">
                 {thread.children.map((comment: any) => (
-                    <ThreadCard
-                        key={comment.id}
-                        id={comment.id}
-                        currentUserId={userInfo.id}
-                        content={comment.text}
-                        author={comment.author}
-                        createdAt={comment.createdAt}
-                        comments={comment.children}
-                        likes={comment.likes}
-                        community={comment.community}
-                        isComment
-                        canDelete={comment.author.id === userInfo.id}
-                    />
+                    <>
+                        <Separator />
+                        <ThreadCard
+                            key={comment.id}
+                            id={comment.id}
+                            currentUserId={userInfo.id}
+                            content={comment.text}
+                            author={comment.author}
+                            createdAt={comment.createdAt}
+                            comments={comment.children}
+                            likes={comment.likes}
+                            community={comment.community}
+                            isComment
+                            canDelete={comment.author.id === userInfo.id}
+                            rounded={false}
+                            showReplyPics={comment.children.length > 0}
+                        />
+                    </>
                 ))}
             </div>
         </section>

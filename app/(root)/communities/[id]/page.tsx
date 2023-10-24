@@ -59,7 +59,7 @@ async function Page({ params }: { params: { id: string } }) {
                                         {tab.label}
                                     </p>
                                     {tab.label === 'Threads' && (
-                                        <p className="ml-1 rounded-sm px-2 py-1 max-sm:hidden">
+                                        <p className="ml-1 rounded-full px-2.5 py-1 max-sm:hidden bg-secondary text-small-semibold">
                                             {communityDetails?.threads.length}
                                         </p>
                                     )}
@@ -81,7 +81,7 @@ async function Page({ params }: { params: { id: string } }) {
                         value="members"
                         className="w-full"
                     >
-                        <section className="mt-9 flex flex-col gap-10">
+                        <section className="mt-9 flex flex-col gap-4">
                             {communityDetails?.members.map((member) => {
                                 return (
                                     <UserCard

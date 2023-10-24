@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft } from 'lucide-react';
+import { MoveLeft } from 'lucide-react';
 
 function BackToProfileButton() {
     const router = useRouter();
@@ -11,9 +11,11 @@ function BackToProfileButton() {
         <Button
             variant="outline"
             size="icon"
+            title="Back"
             onClick={() => router.back()}
+            className="-ml-4 mr-4"
         >
-            <ChevronLeft className="h-4 w-4" />
+            <MoveLeft className="h-4 w-4" />
         </Button>
     );
 }

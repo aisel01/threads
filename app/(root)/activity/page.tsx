@@ -24,7 +24,7 @@ const Page = async () => {
             <h1 className="head-text mb-10">
                 Activity
             </h1>
-            <section className="mt-10 flex flex-col gap-5">
+            <section className="mt-10 flex flex-col gap-10">
                 {replies.length > 0 || likes.length > 0 ? (
                     <>
                         {
@@ -44,9 +44,8 @@ const Page = async () => {
                                                 style={{ height: 20 }}
                                             />
                                             <p className='!text-small-regular'>
-                                                <span className='mr-1'>
-                                                    {a.author.name}
-                                                </span>{' '}
+                                                {a.author.name}
+                                                {' '}
                                                 replied to your thread
                                             </p>
                                         </article>
@@ -72,9 +71,8 @@ const Page = async () => {
                                                     style={{ height: 20 }}
                                                 />
                                                 <p className='!text-small-regular'>
-                                                    <span className='mr-1'>
-                                                        {like.name}
-                                                    </span>{' '}
+                                                    {like.name}
+                                                    {' '}
                                                     liked your thread
                                                 </p>
                                             </article>

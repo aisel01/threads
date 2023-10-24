@@ -49,7 +49,7 @@ function PostThread({ userId }: { userId: string }) {
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(handleSubmit)}
-                    className="mt-10 flex flex-col justify-start gap-10"
+                    className="mt-10 flex flex-col justify-start gap-6"
                 >
                     <FormField
                         control={form.control}
@@ -71,7 +71,7 @@ function PostThread({ userId }: { userId: string }) {
                     />
                     <Button
                         type="submit"
-                        className="bg-primary-500"
+                        variant="default"
                     >
                         Post thread
                     </Button>

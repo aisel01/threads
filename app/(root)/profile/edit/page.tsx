@@ -25,11 +25,11 @@ async function Page() {
 
     return (
         <section className="mx-auto flex max-w-3xl flex-col justify-center">
-            <div className="flex align-baseline gap-4">
+            <div className="flex align-baseline">
                 <BackToProfileButton />
                 <h1 className="head-text">Edit profile</h1>
             </div>
-            <div className="mt-9 p-10">
+            <div className="p-10">
                 <AccountProfile
                     user={userData}
                     btnTitle="Save"

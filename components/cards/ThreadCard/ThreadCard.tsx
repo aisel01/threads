@@ -41,6 +41,7 @@ type ThreadCardProps = {
     isComment?: boolean;
     canDelete?: boolean;
     showReplyPics?: boolean;
+    rounded?: boolean;
 }
 
 function ThreadCard(props: ThreadCardProps) {
@@ -49,21 +50,22 @@ function ThreadCard(props: ThreadCardProps) {
         currentUserId,
         content,
         author,
-        isComment = false,
         comments,
         likes,
         community,
         createdAt,
+        isComment = false,
         canDelete = false,
         showReplyPics = false,
+        rounded = true,
     } = props;
 
     const isLiked = likes.some(like => like.id === currentUserId);
 
     return (
         <article className={cn(
-            'flex w-full justify-between rounded-xl bg-card',
-            isComment ? 'px-0 xs:px-7' : 'p-7',
+            'flex w-full justify-between p-7 bg-card',
+            rounded && 'rounded-xl',
         )}>
             <div className="flex items-start justify-between flex-col">
                 <div className="flex w-full flex-1 flex-row gap-4">
@@ -91,12 +93,11 @@ function ThreadCard(props: ThreadCardProps) {
                         <ThreadCardActions
                             id={id}
                             currentUserId={currentUserId}
-                            isComment={isComment}
                             liked={isLiked}
                         />
                     </div>
                 </div>
-                <div className="mt-2 flex gap-4">
+                <div className="flex gap-4">
                     <div className='w-11 flex justify-center'>
                         {showReplyPics && (
                             <UserList

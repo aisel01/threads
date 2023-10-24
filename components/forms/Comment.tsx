@@ -23,6 +23,7 @@ type CommentProps = {
     threadId: string;
     currentUserImg: string;
     currentUserId: string;
+    parentThreadAuthor: string;
 }
 
 
@@ -31,6 +32,7 @@ function Comment(props: CommentProps) {
         threadId,
         currentUserImg,
         currentUserId,
+        parentThreadAuthor,
     } = props;
 
     const pathname = usePathname();
@@ -57,12 +59,13 @@ function Comment(props: CommentProps) {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(handleSubmit)}
+                className="flex items-center"
             >
                 <FormField
                     control={form.control}
                     name="thread"
                     render={({ field }) => (
-                        <FormItem className="flex w-full items-center gap-3">
+                        <FormItem className="flex w-full items-center gap-3 space-y-0">
                             <FormLabel>
                                 <Image
                                     src={currentUserImg}
@@ -74,8 +77,7 @@ function Comment(props: CommentProps) {
                             </FormLabel>
                             <FormControl className="border-none bg-transparent">
                                 <Input
-                                    placeholder="Comment..."
-                                    className="no-focus"
+                                    placeholder={`Reply to ${parentThreadAuthor}...`}
                                     {...field}
                                 />
                             </FormControl>
@@ -85,8 +87,9 @@ function Comment(props: CommentProps) {
                 />
                 <Button
                     type="submit"
+                    variant="outline"
                 >
-                    Reply
+                    Post
                 </Button>
             </form>
         </Form>

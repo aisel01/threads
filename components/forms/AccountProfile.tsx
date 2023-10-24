@@ -38,6 +38,7 @@ type AccountProfileProps = {
 const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
     const pathname = usePathname();
     const router = useRouter();
+
     const { user: clerkUser } = useUser();
 
     const [files, setFiles] = useState<File[]>([]);
@@ -143,7 +144,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                         name="profile_photo"
                         render={({ field }) => (
                             <FormItem className="flex items-center gap-4">
-                                <FormLabel className="relative">
+                                <FormLabel className="account-form_image-label">
                                     {field.value ? (
                                         <Image
                                             src={field.value}
@@ -156,17 +157,18 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                                         <Image
                                             src="/assets/profile.svg"
                                             alt="profile photo"
-                                            width={24}
-                                            height={24}
+                                            width={56}
+                                            height={56}
                                             className="object-contain"
                                         />
                                     )}
                                 </FormLabel>
-                                <FormControl className="flex-1 text-base-semibold">
+                                <FormControl className="flex-1 text-base-semibold text-secondary-foreground">
                                     <Input
                                         type="file"
                                         accept="image/*"
                                         placeholder="Upload a photo"
+                                        className="account-form_image-input"
                                         onChange={(e) => handleImage(e, field.onChange)}
                                     />
                                 </FormControl>
@@ -178,7 +180,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                         name="name"
                         render={({ field }) => (
                             <FormItem className="flex flex-col gap-2 w-full">
-                                <FormLabel className="text-base-semibol">
+                                <FormLabel className="text-base-semibold">
                                     Name
                                 </FormLabel>
                                 <FormControl>
@@ -229,7 +231,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                     />
                     <Button
                         type="submit"
-                        className="bg-primary-500"
+                        variant="default"
                         disabled={loading}
                     >
                         {btnTitle}

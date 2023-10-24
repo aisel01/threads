@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Button } from '../ui/button';
+import { Edit } from 'lucide-react';
 
 type ProfileHeaderProps = {
     authUserId: string;
@@ -39,22 +41,23 @@ function ProfileHeader(props: ProfileHeaderProps) {
                         <h2 className="text-left text-heading3-bold">
                             {name}
                         </h2>
-                        <p className="text-base-medium">
+                        <p className="text-base-medium text-muted-foreground">
                             @{username}
                         </p>
                     </div>
                 </div>
                 {canEdit && (
                     <Link
+                        legacyBehavior
+                        passHref
                         href={'/profile/edit'}
                     >
-                        <Image
-                            src="/assets/edit.svg"
-                            alt="edit"
-                            width={24}
-                            height={24}
-                            className="cursor-pointer object-contain"
-                        />
+                        <Button
+                            variant="outline"
+                            size="icon"
+                        >
+                            <Edit size={18}/>
+                        </Button>
                     </Link>
                 )}
             </div>

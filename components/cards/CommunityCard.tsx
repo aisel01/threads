@@ -2,6 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { Button } from '../ui/button';
+import UserList from '../shared/UserList';
+import { IUser } from '@/lib/models/user.model';
 
 interface Props {
   id: string;
@@ -9,9 +11,7 @@ interface Props {
   username: string;
   imgUrl: string;
   bio: string;
-  members: {
-    image: string;
-  }[];
+  members: IUser[];
 }
 
 function CommunityCard({ id, name, username, imgUrl, bio, members }: Props) {
@@ -26,12 +26,11 @@ function CommunityCard({ id, name, username, imgUrl, bio, members }: Props) {
                         className='rounded-full object-cover'
                     />
                 </Link>
-
                 <div>
                     <Link href={`/communities/${id}`}>
                         <h4 className='text-base-semibold'>{name}</h4>
                     </Link>
-                    <p className='text-small-medium'>@{username}</p>
+                    <p className='text-small-medium text-muted-foreground'>@{username}</p>
                 </div>
             </div>
 
@@ -40,30 +39,15 @@ function CommunityCard({ id, name, username, imgUrl, bio, members }: Props) {
             <div className='mt-5 flex flex-wrap items-center justify-between gap-3'>
                 <Link href={`/communities/${id}`}>
                     <Button size='sm' className='community-card_btn'>
-            View
+                        View
                     </Button>
                 </Link>
-
                 {members.length > 0 && (
-                    <div className='flex items-center'>
-                        {members.map((member, index) => (
-                            <Image
-                                key={index}
-                                src={member.image}
-                                alt={`user_${index}`}
-                                width={28}
-                                height={28}
-                                className={`${
-                                    index !== 0 && '-ml-2'
-                                } rounded-full object-cover`}
-                            />
-                        ))}
-                        {members.length > 3 && (
-                            <p className='ml-1 text-subtle-medium'>
-                                {members.length}+ Users
-                            </p>
-                        )}
-                    </div>
+                    <UserList
+                        size={28}
+                        maxShown={3}
+                        users={members}
+                    />
                 )}
             </div>
         </article>

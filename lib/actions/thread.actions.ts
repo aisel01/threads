@@ -66,10 +66,10 @@ export async function getThread(id: string) {
                 model: Community,
                 select: '_id id name image',
             })
-            .populate<{ author: Pick<IUser, 'id' | 'name' | 'image'> }>({
+            .populate<{ author: Pick<IUser, 'id' | 'name' | 'username' | 'image'> }>({
                 path: 'author',
                 model: User,
-                select: '_id id name image'
+                select: '_id id name image username'
             })
             .populate<{ likes: Array<Pick<IUser, 'name' | 'username' | 'image' | 'id'>>}>({
                 path: 'likes',

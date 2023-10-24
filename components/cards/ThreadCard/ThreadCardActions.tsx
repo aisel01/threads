@@ -10,14 +10,12 @@ import { Button } from '@/components/ui/button';
 type ThreadCardActionsProps = {
     id: string;
     currentUserId: string;
-    isComment: boolean;
     liked?: boolean;
 }
 
 function ThreadCardActions(props: ThreadCardActionsProps) {
     const {
         id,
-        isComment,
         liked,
         currentUserId,
     } = props;
@@ -45,7 +43,7 @@ function ThreadCardActions(props: ThreadCardActionsProps) {
     };
 
     return (
-        <div className={`${isComment && 'mb-10'} mt-3 flex flex-col gap-3`}>
+        <div className={'mt-3 flex flex-col gap-3'}>
             <div className="flex -ml-2">
                 <Button
                     variant="ghost"
