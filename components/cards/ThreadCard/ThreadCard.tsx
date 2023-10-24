@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { formatDateString } from '@/lib/utils';
+import { cn, formatDateString } from '@/lib/utils';
 import UserList from '../../shared/UserList';
 import UserPic from '../../shared/UserPic';
 import ThreadCardMore from './ThreadCardMore';
@@ -59,7 +59,10 @@ function ThreadCard(props: ThreadCardProps) {
     const isLiked = likes.some(like => like.id === currentUserId);
 
     return (
-        <article className={`flex w-full justify-between rounded-xl ${isComment ? 'px-0 xs:px-7' : 'bg-dark-2 p-7' }`}>
+        <article className={cn(
+            'flex w-full justify-between rounded-xl bg-card',
+            isComment ? 'px-0 xs:px-7' : 'p-7',
+        )}>
             <div className="flex items-start justify-between flex-col">
                 <div className="flex w-full flex-1 flex-row gap-4">
                     <div className="flex flex-col items-center">
@@ -76,11 +79,11 @@ function ThreadCard(props: ThreadCardProps) {
                             href={`/profile/${author.id}`}
                             className="w-fit"
                         >
-                            <h4 className="cursor-pointer text-base-semibold text-light-1">
+                            <h4 className="cursor-pointer text-base-semibold">
                                 {author.name}
                             </h4>
                         </Link>
-                        <p className="mt-2 text-small-regular text-light-2">
+                        <p className="mt-2 text-small-regular">
                             {content}
                         </p>
                         <ThreadCardActions
@@ -102,11 +105,11 @@ function ThreadCard(props: ThreadCardProps) {
                         <Link
                             href={`/thread/${id}`}
                         >
-                            <p className="text-small-regular text-gray-1">
+                            <p className="text-small-regular">
                                 {comments.length} replies
                             </p>
                         </Link>
-                        <p className="text-small-regular text-gray-1">
+                        <p className="text-small-regular">
                             {likes.length} likes
                         </p>
                     </div>
@@ -116,7 +119,7 @@ function ThreadCard(props: ThreadCardProps) {
                         href={`/communities/${community.id}`}
                         className="mt-5 flex items-center"
                     >
-                        <p className="text-subtle-medium text-gray-1">
+                        <p className="text-subtle-medium">
                             {formatDateString(createdAt)} - {community.name} Community
                         </p>
                         <Image

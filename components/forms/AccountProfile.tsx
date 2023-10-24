@@ -143,7 +143,7 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                         name="profile_photo"
                         render={({ field }) => (
                             <FormItem className="flex items-center gap-4">
-                                <FormLabel className="account-form_image-label relative">
+                                <FormLabel className="relative">
                                     {field.value ? (
                                         <Image
                                             src={field.value}
@@ -162,12 +162,11 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                                         />
                                     )}
                                 </FormLabel>
-                                <FormControl className="flex-1 text-base-semibold text-gray-200">
+                                <FormControl className="flex-1 text-base-semibold">
                                     <Input
                                         type="file"
                                         accept="image/*"
                                         placeholder="Upload a photo"
-                                        className="account-form_image-input"
                                         onChange={(e) => handleImage(e, field.onChange)}
                                     />
                                 </FormControl>
@@ -179,13 +178,13 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                         name="name"
                         render={({ field }) => (
                             <FormItem className="flex flex-col gap-2 w-full">
-                                <FormLabel className="text-base-semibold text-light-2">
+                                <FormLabel className="text-base-semibol">
                                     Name
                                 </FormLabel>
                                 <FormControl>
                                     <Input
                                         type="text"
-                                        className="account-form_input no-focus"
+                                        className="no-focus"
                                         {...field}
                                     />
                                 </FormControl>
@@ -197,13 +196,13 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                         name="username"
                         render={({ field }) => (
                             <FormItem className="flex flex-col gap-2 w-full">
-                                <FormLabel className="text-base-semibold  text-light-2">
+                                <FormLabel className="text-base-semibold">
                                     Username
                                 </FormLabel>
                                 <FormControl>
                                     <Input
                                         type="text"
-                                        className="account-form_input no-focus"
+                                        className="no-focus"
                                         {...field}
                                     />
                                 </FormControl>
@@ -215,13 +214,13 @@ const AccountProfile = ({ user, btnTitle }: AccountProfileProps) => {
                         name="bio"
                         render={({ field }) => (
                             <FormItem className="flex flex-col gap-2 w-full">
-                                <FormLabel className="text-base-semibold  text-light-2">
+                                <FormLabel className="text-base-semibold">
                                     Bio
                                 </FormLabel>
                                 <FormControl>
                                     <Textarea
                                         rows={4}
-                                        className="account-form_input no-focus"
+                                        className="no-focus"
                                         {...field}
                                     />
                                 </FormControl>

@@ -57,7 +57,6 @@ function Comment(props: CommentProps) {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(handleSubmit)}
-                className="comment-form"
             >
                 <FormField
                     control={form.control}
@@ -76,7 +75,7 @@ function Comment(props: CommentProps) {
                             <FormControl className="border-none bg-transparent">
                                 <Input
                                     placeholder="Comment..."
-                                    className="no-focus text-light-1 "
+                                    className="no-focus"
                                     {...field}
                                 />
                             </FormControl>
@@ -86,7 +85,6 @@ function Comment(props: CommentProps) {
                 />
                 <Button
                     type="submit"
-                    className="comment-form_btn"
                 >
                     Reply
                 </Button>

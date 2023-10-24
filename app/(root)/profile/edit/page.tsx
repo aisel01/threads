@@ -29,7 +29,7 @@ async function Page() {
                 <BackToProfileButton />
                 <h1 className="head-text">Edit profile</h1>
             </div>
-            <div className="mt-9 bg-dark-2 p-10">
+            <div className="mt-9 p-10">
                 <AccountProfile
                     user={userData}
                     btnTitle="Save"

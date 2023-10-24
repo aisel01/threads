@@ -43,8 +43,8 @@ const Page = async () => {
                                                 className="rounded-full object-cover"
                                                 style={{ height: 20 }}
                                             />
-                                            <p className='!text-small-regular text-light-1'>
-                                                <span className='mr-1 text-primary-500'>
+                                            <p className='!text-small-regular'>
+                                                <span className='mr-1'>
                                                     {a.author.name}
                                                 </span>{' '}
                                                 replied to your thread
@@ -71,8 +71,8 @@ const Page = async () => {
                                                     className="rounded-full object-cover"
                                                     style={{ height: 20 }}
                                                 />
-                                                <p className='!text-small-regular text-light-1'>
-                                                    <span className='mr-1 text-primary-500'>
+                                                <p className='!text-small-regular'>
+                                                    <span className='mr-1'>
                                                         {like.name}
                                                     </span>{' '}
                                                     liked your thread

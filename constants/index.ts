@@ -1,31 +1,33 @@
+import { Heart, Home, Search, PenSquare, Users, User } from 'lucide-react';
+
 export const sidebarLinks = [
     {
-        imgURL: '/assets/home.svg',
+        icon: Home,
         route: '/',
         label: 'Home',
     },
     {
-        imgURL: '/assets/search.svg',
+        icon: Search,
         route: '/search',
         label: 'Search',
     },
     {
-        imgURL: '/assets/heart.svg',
+        icon: Heart,
         route: '/activity',
         label: 'Activity',
     },
     {
-        imgURL: '/assets/create.svg',
+        icon: PenSquare,
         route: '/create-thread',
         label: 'Create Thread',
     },
     {
-        imgURL: '/assets/community.svg',
+        icon: Users,
         route: '/communities',
         label: 'Communities',
     },
     {
-        imgURL: '/assets/user.svg',
+        icon: User,
         route: '/profile',
         label: 'Profile',
     },

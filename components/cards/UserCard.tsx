@@ -32,8 +32,8 @@ function UserCard(props: UserCardProps) {
                     className="rounded-full"
                 />
                 <div className="flex-1 text-ellipsis">
-                    <h4 className="text-base-semibold text-light-1">{name}</h4>
-                    <p className="text-small-medium text-gray-1">@{username}</p>
+                    <h4 className="text-base-semibold">{name}</h4>
+                    <p className="text-small-medium">@{username}</p>
                 </div>
             </div>
             <Button

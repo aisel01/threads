@@ -58,7 +58,7 @@ async function Page({ params }: { params: { id?: string[] } }) {
                                         {tab.label}
                                     </p>
                                     {tab.label === 'Threads' && (
-                                        <p className="ml-1 rounded-sm bg-light-4 px-2 py-1 text-light-1 max-sm:hidden">
+                                        <p className="ml-1 rounded-sm px-2 py-1 max-sm:hidden">
                                             {userInfo?.threads.length}
                                         </p>
                                     )}
@@ -71,7 +71,7 @@ async function Page({ params }: { params: { id?: string[] } }) {
                             <TabsContent
                                 key={`content-${tab.value}`}
                                 value={tab.value}
-                                className="w-full text-light-1"
+                                className="w-full"
                             >
                                 {tab.value === 'threads' && (
                                     <TreadsTab

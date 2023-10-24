@@ -36,10 +36,10 @@ function ProfileHeader(props: ProfileHeaderProps) {
                         />
                     </div>
                     <div className="flex-1 ">
-                        <h2 className="text-light-1 text-left text-heading3-bold">
+                        <h2 className="text-left text-heading3-bold">
                             {name}
                         </h2>
-                        <p className="text-base-medium text-gray-1">
+                        <p className="text-base-medium">
                             @{username}
                         </p>
                     </div>
@@ -58,10 +58,10 @@ function ProfileHeader(props: ProfileHeaderProps) {
                     </Link>
                 )}
             </div>
-            <p className="mt-6 max-w-lg text-base-regular text-light-2">
+            <p className="mt-6 max-w-lg text-base-regular">
                 {bio}
             </p>
-            <div className="mt-12 bg-dark-3 h-0.5 w-full" />
+            <div className="mt-12 h-0.5 w-full" />
         </div>
     );
 }

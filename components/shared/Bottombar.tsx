@@ -2,39 +2,58 @@
 
 import { sidebarLinks } from '@/constants';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import {
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    navigationMenuTriggerStyle,
+} from '@/components/ui/navigation-menu';
+import { cn } from '@/lib/utils';
 
 function Bottombar() {
     const pathname = usePathname();
 
     return (
         <section className="bottombar">
-            <div className="bottombar_container">
-                {sidebarLinks.map(link => {
-                    const isActive =
-                        (pathname.includes(link.route) && link.route.length > 1) ||
-                        pathname === link.route;
+            <NavigationMenu>
+                <NavigationMenuList
+                    className="bottombar_container"
+                >
+                    {sidebarLinks.map(link => {
+                        const isActive =
+                            (pathname.includes(link.route) && link.route.length > 1) ||
+                            pathname === link.route;
 
-                    return (
-                        <Link
-                            key={link.label}
-                            href={link.route}
-                            className={`bottombar_link ${isActive && 'bg-primary-500'}`}
-                        >
-                            <Image
-                                alt={link.label}
-                                src={link.imgURL}
-                                width={24}
-                                height={24}
-                            />
-                            <p className="text-subtle-medium text-light-1 max-sm:hidden">
-                                {link.label.split(' ')[0]}
-                            </p>
-                        </Link>
-                    );
-                })}
-            </div>
+                        return (
+                            <NavigationMenuItem
+                                key={link.label}
+                                className="flex-1"
+                            >
+                                <Link
+                                    href={link.route}
+                                    legacyBehavior
+                                    passHref
+                                >
+                                    <NavigationMenuLink
+                                        className={cn(
+                                            'bottombar_link',
+                                            navigationMenuTriggerStyle(),
+                                        )}
+                                        active={isActive}
+                                    >
+                                        <link.icon />
+                                        <p className="max-sm:hidden text-subtle-medium">
+                                            {link.label.split(' ')[0]}
+                                        </p>
+                                    </NavigationMenuLink>
+                                </Link>
+                            </NavigationMenuItem>
+                        );
+                    })}
+                </NavigationMenuList>
+            </NavigationMenu>
         </section>
     );
 }

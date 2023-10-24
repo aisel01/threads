@@ -22,7 +22,7 @@ function UserList(props: UserListProps) {
             {users.slice(0, maxShown).map(user => {
                 return (
                     <UserPic
-                        className="ring-2 ring-dark-1"
+                        className="ring-2"
                         key={user.id}
                         id={user.id}
                         image={user.image}
