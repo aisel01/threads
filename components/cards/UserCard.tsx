@@ -9,6 +9,7 @@ type UserCardProps = {
     name: string;
     username: string;
     imgUrl: string;
+    compact?: boolean;
 }
 
 function UserCard(props: UserCardProps) {
@@ -17,6 +18,7 @@ function UserCard(props: UserCardProps) {
         name,
         username,
         imgUrl,
+        compact = false,
     } = props;
 
     const router = useRouter();
@@ -25,22 +27,32 @@ function UserCard(props: UserCardProps) {
         <article className="user-card w-full">
             <div className="user-card_avatar">
                 <UserPic
-                    size={44}
+                    size={compact ? 36 : 44}
                     image={imgUrl}
                     name={name}
                     id={id}
                 />
                 <div className="flex-1 text-ellipsis">
-                    <h4 className="text-base-semibold">{name}</h4>
-                    <p className="text-small-medium text-muted-foreground">@{username}</p>
+                    <h4
+                        className={`${compact ? 'text-small-semibold' : 'text-base-semibold'}`}
+                    >
+                        {name}
+                    </h4>
+                    <p
+                        className={`${compact ? 'text-subtle-medium ' : 'text-small-medium'} text-muted-foreground`}
+                    >
+                        @{username}
+                    </p>
                 </div>
             </div>
-            <Button
-                className="user-card_btn"
-                onClick={() => router.push(`/profile/${id}`)}
-            >
-                View
-            </Button>
+            {!compact && (
+                <Button
+                    className="user-card_btn"
+                    onClick={() => router.push(`/profile/${id}`)}
+                >
+                    View
+                </Button>
+            )}
         </article>
     );
 }
