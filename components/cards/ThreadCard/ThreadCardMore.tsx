@@ -42,7 +42,7 @@ function ThreadCardMore(props: ThreadCardMoreProps) {
     return (
         <div className={className}>
             <DropdownMenu>
-                <DropdownMenuTrigger disabled={isDeletePending}>
+                <DropdownMenuTrigger disabled={isDeletePending} asChild>
                     <Button variant="ghost" size="icon" className="-mt-3">
                         <MoreHorizontal size={16} />
                     </Button>
