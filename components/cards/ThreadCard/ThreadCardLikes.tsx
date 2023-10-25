@@ -20,7 +20,7 @@ function ThreadCardLikes(props: ThreadCardLikesProps) {
             <DialogTrigger className="text-small-regular text-muted-foreground hover:underline">
                 View likes
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] max-h-96 overflow-auto">
+            <DialogContent className="max-h-96 overflow-auto sm:max-w-[425px]">
                 <DialogTitle>View likes</DialogTitle>
                 <DialogDescription className="flex flex-col gap-4">
                     {likes.map(like => {

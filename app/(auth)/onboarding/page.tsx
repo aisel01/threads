@@ -32,7 +32,7 @@ async function Page() {
     };
 
     return (
-        <main className="mx-auto flex max-w-3xl flex-col justify-center px-10 py-10 bg-popover rounded-lg">
+        <main className="mx-auto flex max-w-3xl flex-col justify-center rounded-lg bg-popover p-10">
             <h1 className="head-text">Onboarding</h1>
             <p className="mt-3 text-base-regular">
                 Complete your profile now to use Threads

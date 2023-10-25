@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint:recommended", "plugin:react/recommended", "next/core-web-vitals"],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "next/core-web-vitals", "plugin:tailwindcss/recommended"],
   "plugins": [
     "eslint-plugin-react",
     "eslint-plugin-react-hooks",

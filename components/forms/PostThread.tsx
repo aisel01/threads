@@ -55,7 +55,7 @@ function PostThread({ userId }: { userId: string }) {
                         control={form.control}
                         name="thread"
                         render={({ field }) => (
-                            <FormItem className="flex flex-col gap-2 w-full">
+                            <FormItem className="flex w-full flex-col gap-2">
                                 <FormLabel className="text-base-semibold ">
                                     Content
                                 </FormLabel>

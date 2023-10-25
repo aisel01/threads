@@ -44,7 +44,7 @@ function ThreadCardActions(props: ThreadCardActionsProps) {
 
     return (
         <div className={'mt-3 flex flex-col gap-3'}>
-            <div className="flex -ml-2">
+            <div className="-ml-2 flex">
                 <Button
                     variant="ghost"
                     size="icon"

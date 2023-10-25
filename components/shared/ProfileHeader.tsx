@@ -27,9 +27,9 @@ function ProfileHeader(props: ProfileHeaderProps) {
 
     return (
         <div className="flex w-full flex-col justify-start">
-            <div className="flex justify-between items-stretch">
+            <div className="flex items-stretch justify-between">
                 <div className="flex items-center gap-3">
-                    <div className="relative w-20 h-20">
+                    <div className="relative h-20 w-20">
                         <Image
                             src={imgUrl}
                             alt="Profile image"
@@ -61,7 +61,7 @@ function ProfileHeader(props: ProfileHeaderProps) {
                     </Link>
                 )}
             </div>
-            <p className="mt-6 mb-4 max-w-lg text-base-regular">
+            <p className="mb-4 mt-6 max-w-lg text-base-regular">
                 {bio}
             </p>
         </div>

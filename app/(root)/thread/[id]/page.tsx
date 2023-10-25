@@ -39,7 +39,7 @@ async function Page({ params }: { params: { id: string } }) {
                 />
                 <Separator />
             </div>
-            <div className="py-4 px-7">
+            <div className="px-7 py-4">
                 <Comment
                     threadId={thread.id}
                     currentUserId={userInfo.id}

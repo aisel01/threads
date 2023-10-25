@@ -67,7 +67,7 @@ function ThreadCard(props: ThreadCardProps) {
             'flex w-full justify-between p-7 bg-card',
             rounded && 'rounded-xl',
         )}>
-            <div className="flex items-start justify-between flex-col w-full">
+            <div className="flex w-full flex-col items-start justify-between">
                 <div className="flex w-full flex-1 flex-row gap-4">
                     <div className="flex flex-col items-center">
                         <UserPic
@@ -79,7 +79,7 @@ function ThreadCard(props: ThreadCardProps) {
                         {showReplyPics && <div className="thread-card_bar" />}
                     </div>
                     <div className="flex w-full flex-col">
-                        <div className="flex justify-between w-full">
+                        <div className="flex w-full justify-between">
                             <Link
                                 href={`/profile/${author.id}`}
                                 className="w-fit"
@@ -88,7 +88,7 @@ function ThreadCard(props: ThreadCardProps) {
                                     {author.name}
                                 </h4>
                             </Link>
-                            <div className="flex gap-2 align-baseline self-start">
+                            <div className="flex gap-2 self-start align-baseline">
                                 <span className="text-small-regular text-muted-foreground" title={formatDateString(createdAt)}>
                                     {formatDateDistance(createdAt)}
                                 </span>
@@ -110,7 +110,7 @@ function ThreadCard(props: ThreadCardProps) {
                     </div>
                 </div>
                 <div className="flex gap-4">
-                    <div className='w-11 flex justify-center'>
+                    <div className='flex w-11 justify-center'>
                         {showReplyPics && (
                             <UserList
                                 size={18}

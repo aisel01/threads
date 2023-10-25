@@ -44,7 +44,7 @@ function Bottombar() {
                                         active={isActive}
                                     >
                                         <link.icon />
-                                        <p className="max-sm:hidden text-subtle-medium">
+                                        <p className="text-subtle-medium max-sm:hidden">
                                             {link.label.split(' ')[0]}
                                         </p>
                                     </NavigationMenuLink>

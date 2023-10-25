@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         enableSystem
                         disableTransitionOnChange
                     >
-                        <div className="w-full flex justify-center items-center min-h-screen">
+                        <div className="flex min-h-screen w-full items-center justify-center">
                             {children}
                         </div>
                     </ThemeProvider>
