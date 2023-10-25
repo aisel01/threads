@@ -77,11 +77,11 @@ function Comment(props: CommentProps) {
                             </FormLabel>
                             <FormControl className="border-none bg-transparent">
                                 <Input
+                                    className="no-focus"
                                     placeholder={`Reply to ${parentThreadAuthor}...`}
                                     {...field}
                                 />
                             </FormControl>
-                            <FormMessage />
                         </FormItem>
                     )}
                 />

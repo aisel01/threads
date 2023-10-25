@@ -208,6 +208,15 @@ export async function deleteThread(id: string, path: string): Promise<void> {
         logger.debug({ descendantThreadIds }, 'Recursively delete child threads and their descendants');
         await Thread.deleteMany({ _id: { $in: descendantThreadIds } });
 
+
+        if (mainThread.parentId) {
+            logger.debug({ parentId: mainThread.parentId }, 'Update parent thread');
+            await Thread.findByIdAndUpdate(
+                mainThread.parentId,
+                { $pull: { children: mainThread._id } }
+            );
+        }
+
         logger.debug({ uniqueAuthorIds }, 'Update User model');
         await User.updateMany(
             { _id: { $in: Array.from(uniqueAuthorIds) } },
