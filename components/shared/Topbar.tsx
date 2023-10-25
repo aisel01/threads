@@ -1,7 +1,7 @@
 'use client';
 
 import { OrganizationSwitcher, SignOutButton, SignedIn } from '@clerk/nextjs';
-import { dark, neobrutalism } from '@clerk/themes';
+import { dark } from '@clerk/themes';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -38,7 +38,7 @@ function Topbar() {
 
                 <OrganizationSwitcher
                     appearance={{
-                        baseTheme: theme === ThemeValue.dark ? dark : neobrutalism,
+                        baseTheme: theme === ThemeValue.dark ? dark : undefined,
                         elements: {
                             organizationSwitcherTrigger: 'py-2 px-4'
                         }
