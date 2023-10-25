@@ -67,7 +67,7 @@ function ThreadCard(props: ThreadCardProps) {
             'flex w-full justify-between p-7 bg-card',
             rounded && 'rounded-xl',
         )}>
-            <div className="flex items-start justify-between flex-col">
+            <div className="flex items-start justify-between flex-col w-full">
                 <div className="flex w-full flex-1 flex-row gap-4">
                     <div className="flex flex-col items-center">
                         <UserPic
@@ -79,14 +79,26 @@ function ThreadCard(props: ThreadCardProps) {
                         {showReplyPics && <div className="thread-card_bar" />}
                     </div>
                     <div className="flex w-full flex-col">
-                        <Link
-                            href={`/profile/${author.id}`}
-                            className="w-fit"
-                        >
-                            <h4 className="cursor-pointer text-base-semibold">
-                                {author.name}
-                            </h4>
-                        </Link>
+                        <div className="flex justify-between w-full">
+                            <Link
+                                href={`/profile/${author.id}`}
+                                className="w-fit"
+                            >
+                                <h4 className="cursor-pointer text-base-semibold">
+                                    {author.name}
+                                </h4>
+                            </Link>
+                            <div className="flex gap-2 align-baseline self-start">
+                                <span className="text-small-regular text-muted-foreground" title={formatDateString(createdAt)}>
+                                    {formatDateDistance(createdAt)}
+                                </span>
+                                <ThreadCardMore
+                                    className={cn(!canDelete && 'invisible')}
+                                    id={id}
+                                    isComment={isComment}
+                                />
+                            </div>
+                        </div>
                         <p className="mt-1 text-small-regular">
                             {content}
                         </p>
@@ -135,16 +147,6 @@ function ThreadCard(props: ThreadCardProps) {
                         />
                     </Link>
                 )}
-            </div>
-            <div className="flex gap-2 align-baseline self-start">
-                <span className="text-small-regular text-muted-foreground" title={formatDateString(createdAt)}>
-                    {formatDateDistance(createdAt)}
-                </span>
-                <ThreadCardMore
-                    className={cn(!canDelete && 'invisible')}
-                    id={id}
-                    isComment={isComment}
-                />
             </div>
         </article>
     );
