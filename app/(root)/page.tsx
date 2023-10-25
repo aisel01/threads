@@ -6,11 +6,7 @@ import { redirect } from 'next/navigation';
 async function Page() {
     const userInfo = await getCurrentUser();
 
-    if (!userInfo) {
-        return null;
-    }
-
-    if (!userInfo.onboarded) {
+    if (!userInfo || !userInfo.onboarded) {
         redirect('/onboarding');
     }
 

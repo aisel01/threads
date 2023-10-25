@@ -12,11 +12,7 @@ async function Page({ params }: { params: { id: string } }) {
 
     const userInfo = await getCurrentUser();
 
-    if (!userInfo) {
-        return null;
-    }
-
-    if (!userInfo.onboarded) {
+    if (!userInfo || !userInfo.onboarded) {
         redirect('/onboarding');
     }
 
