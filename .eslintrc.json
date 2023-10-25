@@ -2,12 +2,15 @@
   "extends": ["eslint:recommended", "plugin:react/recommended", "next/core-web-vitals"],
   "plugins": [
     "eslint-plugin-react",
-    "eslint-plugin-react-hooks"
+    "eslint-plugin-react-hooks",
+    "@typescript-eslint"
   ],
   "rules": {
     "indent": ["error", 4],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
-    "no-trailing-spaces": ["error"]
+    "no-trailing-spaces": ["error"],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "error"
   }
 }
