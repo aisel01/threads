@@ -3,11 +3,12 @@
 import { revalidatePath } from 'next/cache';
 import User, { IUser } from '../models/user.model';
 import { connectToDB } from '../mongoose';
-import { Error, FilterQuery, SortOrder, Types } from 'mongoose';
+import mongoose, { Error, FilterQuery, SortOrder, Types } from 'mongoose';
 import Thread, { IThread } from '../models/thread.model';
 import Community, { ICommunity } from '../models/community.model';
 import { logger } from '@/logger';
 import { currentUser } from '@clerk/nextjs';
+import { AccountInfo } from '../types/AccountInfo';
 
 type CreateUserPayload = {
     clerkId: string;
@@ -205,9 +206,15 @@ export async function getUsers({
             .skip(skipAmount)
             .limit(pageSize);
 
-        const totalUsersCount = await User.countDocuments(query);
-
-        const users = await usersQuery.exec();
+        console.time('users');
+        const [
+            totalUsersCount,
+            users,
+        ] = await Promise.all([
+            User.countDocuments(query),
+            usersQuery.exec()
+        ]);
+        console.timeEnd('users');
 
         const hasNext = totalUsersCount  >skipAmount + users.length;
 
@@ -251,23 +258,32 @@ export async function getReplies(userId: string) {
     }
 }
 
-export async function getLikes(userId: string) {
+export async function getLikes(userId: string): Promise<{
+    id: string;
+    likes: AccountInfo[];
+}[]> {
     // TODO: pagination
     try {
         await connectToDB();
 
+        console.time('likes');
         // TODO: remove own likes, make array flat
         const likes = await Thread
-            .find({
-                author: userId
+            .aggregate()
+            .match({ author: { $eq: new mongoose.Types.ObjectId(userId) } })
+            .lookup({
+                from: 'users',
+                localField: 'likes',
+                as: 'likes',
+                foreignField: '_id',
+                pipeline: [
+                    { $project: { 'name': 1, 'username': 1, 'image': 1, 'id': { $toString: '$_id' } } }
+                ]
             })
-            .populate<{ likes: Array<Pick<IUser, 'name' | 'username' | 'image' | 'id'>> }>({
-                path: 'likes',
-                model: User,
-                select: 'id name username image'
-            });
+            .project({ 'likes': 1, 'id': { $toString: '$_id' } });
 
-        logger.debug({likes}, 'LIKES');
+        console.timeEnd('likes');
+
         return likes;
     } catch (e: any) {
         throw new Error(`Failed to get activity: ${e.message}`);
@@ -276,6 +292,7 @@ export async function getLikes(userId: string) {
 
 export async function getActivity(userId: string) {
     try {
+        console.time('activity');
         const [
             replies,
             likes,
@@ -283,6 +300,8 @@ export async function getActivity(userId: string) {
             getReplies(userId),
             getLikes(userId)
         ]);
+        console.timeEnd('activity');
+
 
         // TODO: sort by date
         return { replies, likes };

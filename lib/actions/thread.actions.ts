@@ -7,40 +7,107 @@ import { Error } from 'mongoose';
 import Thread, { IThread } from '../models/thread.model';
 import Community, { ICommunity } from '../models/community.model';
 import { logger } from '@/logger';
+import { AccountInfo } from '../types/AccountInfo';
 
-export async function getThreads(page = 1, pageSize = 20) {
+type TreadResult = {
+    id: string;
+    text: string;
+    author: AccountInfo,
+    community?: AccountInfo;
+    createdAt: Date;
+    children: {
+        id: string;
+        author: AccountInfo;
+    }[];
+    likes: AccountInfo[];
+}
+
+export async function getThreads(page = 1, pageSize = 20): Promise<{threads: TreadResult[], hasNext: boolean}> {
     try {
         await connectToDB();
 
         const skipAmount = (page - 1) * pageSize;
 
-        const threads = await Thread.find({ parentId: { $in: [null, undefined] } })
+        const threadsPromise: Promise<TreadResult[]> = Thread
+            .aggregate()
+            .match({ parentId: { $in: [null, undefined] } })
             .sort({ createdAt: 'desc' })
             .skip(skipAmount)
             .limit(pageSize)
-            .populate<{ community: ICommunity }>({
-                path: 'community',
-                model: Community,
+            .lookup({
+                from: 'communities',
+                localField: 'community',
+                as: 'community',
+                foreignField: '_id',
+                pipeline: [
+                    { $project: { 'name': 1, 'username': 1, 'image': 1, 'id': { $toString: '$_id' } } }
+                ]
             })
-            .populate<{ author: IUser }>({
-                path: 'author',
-                model: User
+            .unwind({ path: '$community', preserveNullAndEmptyArrays: true })
+            .lookup({
+                from: 'users',
+                localField: 'author',
+                as: 'author',
+                foreignField: '_id',
+                pipeline: [
+                    { $project: { 'name': 1, 'username': 1, 'image': 1, 'id': { $toString: '$_id' } } }
+                ]
             })
-            .populate<{ likes: Array<Pick<IUser, 'name' | 'username' | 'image' | 'id'>>}>({
-                path: 'likes',
-                model: User,
-                select: 'name username image id',
+            .unwind({ path: '$author', preserveNullAndEmptyArrays: true })
+            .lookup({
+                from: 'users',
+                localField: 'likes',
+                as: 'likes',
+                foreignField: '_id',
+                pipeline: [
+                    { $project: { 'name': 1, 'username': 1, 'image': 1, 'id': { $toString: '$_id' } } }
+                ]
             })
-            .populate<{ children: Array<{ author: Pick<IUser, 'id' | 'name' | 'image'>}> }>({
-                path: 'children',
-                populate: {
-                    path: 'author',
-                    model: User,
-                    select: 'id name image'
-                }
+            .lookup({
+                from: 'threads',
+                localField: 'children',
+                as: 'children',
+                foreignField: '_id',
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'author',
+                            foreignField: '_id',
+                            as: 'author',
+                            pipeline: [
+                                {
+                                    $project: { 'name': 1, 'username': 1, 'image': 1, 'id': { $toString: '$_id' } },
+                                },
+                            ]
+                        }
+                    },
+                    {
+                        $project: { 'id': { $toString: '$_id' }, 'author': { $arrayElemAt: [ '$author', 0 ] }}
+                    },
+                ]
+            })
+            .project({
+                'id': { $toString: '$_id' },
+                text: 1,
+                author: 1,
+                community: 1,
+                createdAt: 1,
+                children: 1,
+                likes: 1,
             });
 
-        const totalCount = await Thread.countDocuments({ parentId: { $in: [null, undefined] } });
+        const totalCountPromise = Thread.countDocuments({ parentId: { $in: [null, undefined] } });
+
+        console.time('threads');
+        const [
+            threads,
+            totalCount,
+        ] = await Promise.all([
+            threadsPromise,
+            totalCountPromise,
+        ]);
+        console.timeEnd('threads');
 
         const hasNext = totalCount > skipAmount + threads.length;
 
@@ -48,7 +115,6 @@ export async function getThreads(page = 1, pageSize = 20) {
             threads,
             hasNext,
         };
-
     } catch (e: any) {
         throw new Error(`Error getting threads: ${e.message}`);
     }
@@ -61,10 +127,10 @@ export async function getThread(id: string) {
 
         const thread = await Thread
             .findById(id)
-            .populate<{ community: Pick<ICommunity, 'id' | 'name' | 'image'> }>({
+            .populate<{ community: Pick<ICommunity, 'id' | 'name' | 'image' | 'username'> }>({
                 path: 'community',
                 model: Community,
-                select: '_id id name image',
+                select: '_id id name image username',
             })
             .populate<{ author: Pick<IUser, 'id' | 'name' | 'username' | 'image'> }>({
                 path: 'author',
@@ -78,8 +144,9 @@ export async function getThread(id: string) {
             })
             .populate<{
                 children: {
-                    author: Pick<IUser, 'id' | 'name' | 'image'>,
-                    children: IThread & { author: Pick<IUser, 'id' | 'name' | 'image'> }
+                    id: string;
+                    author: Pick<IUser, 'id' | 'name' | 'image' | 'username'>,
+                    children: IThread & { author: Pick<IUser, 'id' | 'name' | 'username' | 'image'> }
                 }[]
             }>({
                 path: 'children',
@@ -87,7 +154,7 @@ export async function getThread(id: string) {
                     {
                         path: 'author',
                         model: User,
-                        select: 'id name parentId image'
+                        select: 'id name username image'
                     },
                     {
                         path: 'likes',
@@ -100,7 +167,7 @@ export async function getThread(id: string) {
                         populate: {
                             path: 'author',
                             model: User,
-                            select: 'id name image'
+                            select: 'id name username image'
                         }
                     }
                 ]

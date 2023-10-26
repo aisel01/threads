@@ -39,9 +39,14 @@ async function TreadsTab(props: TreadsTabProps) {
                         content={thread.text}
                         author={
                             accountType === 'User'
-                                ? { name: result.name, image: result.image, id: result.id }
+                                ? { name: result.name,
+                                    image: result.image,
+                                    id: result.id,
+                                    username: result.username,
+                                }
                                 : {
                                     name: thread.author.name,
+                                    username: thread.author.username,
                                     image: thread.author.image,
                                     id: thread.author.id,
                                 }

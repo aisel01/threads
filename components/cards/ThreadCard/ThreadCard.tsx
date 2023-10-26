@@ -6,13 +6,11 @@ import UserPic from '../../shared/UserPic';
 import ThreadCardMore from './ThreadCardMore';
 import ThreadCardActions from './ThreadCardActions';
 import ThreadCardLikes from './ThreadCardLikes';
+import { AccountInfo } from '@/lib/types/AccountInfo';
 
 type Comment = {
-    author: {
-        id: string;
-        name: string;
-        image: string;
-    }
+    id: string;
+    author: AccountInfo;
 }
 
 type ThreadCardProps = {
@@ -20,24 +18,11 @@ type ThreadCardProps = {
     currentUserId: string;
     content: string;
     parentId?: string;
-    author: {
-        id: string;
-        name: string;
-        image: string;
-    },
-    community?: {
-        id: string;
-        name: string;
-        image: string;
-    };
+    author: AccountInfo;
+    community?: AccountInfo;
     createdAt: Date;
     comments: Comment[];
-    likes: {
-        id: string;
-        name: string;
-        username: string;
-        image: string;
-    }[];
+    likes: AccountInfo[];
     isComment?: boolean;
     canDelete?: boolean;
     showReplyPics?: boolean;
