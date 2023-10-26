@@ -200,15 +200,15 @@ export async function createThread({
             communityId,
         }, 'Creating thread');
 
-        const communityIdObject = await Community.findById(
-            communityId,
+        const communityIdObject = await Community.findOne(
+            { clerkId: communityId },
             { _id: 1 }
         );
 
         const createdThread = await Thread.create({
             text,
             author,
-            community: communityIdObject,
+            community: communityIdObject?._id,
         });
 
         await User.findByIdAndUpdate(author, {
